@@ -88,7 +88,7 @@ main = do
       Nothing -> Dir.getXdgDirectory Dir.XdgConfig "bm.yaml"
     config <- Yaml.decodeFileThrow configPath
     let (eep, traceLines) = BM.run config args
-    when traceOpt $ mapM_ putStrLn traceLines
+    when traceOpt $ mapM_ (hPutStrLn stderr) traceLines
     either errorExit runProc eep
   where
     pinfo :: OA.ParserInfo Options
