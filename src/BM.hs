@@ -31,7 +31,7 @@ import qualified Data.Aeson.Types as AT
 
 -- https://hackage.haskell.org/package/base
 import Data.List (find, intercalate, isPrefixOf)
-import Data.Maybe (fromMaybe)
+import Data.Maybe (fromMaybe, listToMaybe)
 import Data.Version (showVersion)
 
 -- https://hackage.haskell.org/package/network-uri
@@ -166,18 +166,21 @@ run Config{..} = loop configCommand configArgs
   where
     loop :: Command -> [Bookmark] -> [Argument] -> Either Error Proc
     loop cmd bms (arg:args) = case find (isPrefixOf arg . keyword) bms of
-      Just Bookmark{..} -> case queryOrArgs of
+      Just bm -> case queryOrArgs bm of
         Left query
-          | null args -> case mUrl of
-              Just url -> Right $ openUrl (fromMaybe cmd mCommand) url
-              Nothing  -> Left $ "no query for " ++ keyword
+          | null args -> case mUrl bm of
+              Just url -> Right $ openUrl (fromMaybe cmd $ mCommand bm) url
+              Nothing  -> Left $ "no query for " ++ keyword bm
           | otherwise ->
-              Right $ openQuery (fromMaybe cmd mCommand) query args
+              Right $ openQuery (fromMaybe cmd $ mCommand bm) query args
         Right bms'
-          | null args -> case mUrl of
-              Just url -> Right $ openUrl (fromMaybe cmd mCommand) url
-              Nothing  -> Left $ "no URL for " ++ keyword
-          | otherwise -> loop (fromMaybe cmd mCommand) bms' args
+          | null args -> case mUrl bm of
+              Just url -> Right $ openUrl (fromMaybe cmd $ mCommand bm) url
+              Nothing  -> case listToMaybe bms' of
+                Just bm' ->
+                  loop (fromMaybe cmd $ mCommand bm) bms' [keyword bm']
+                Nothing  -> Left $ "no URL for " ++ keyword bm
+          | otherwise -> loop (fromMaybe cmd $ mCommand bm) bms' args
       Nothing -> Left $ "unknown argument: " ++ arg
     loop _cmd _bms [] = Left "no arguments"
 

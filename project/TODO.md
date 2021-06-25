@@ -2,7 +2,6 @@
 
 ## Functionality
 
-* Select first child if no URL/query
 * Set default command depending on the OS
     * Windows: `start`
     * macOS: `open`
