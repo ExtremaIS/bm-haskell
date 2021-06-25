@@ -1,0 +1,86 @@
+name:           bm
+version:        0.0.0.0
+category:       Utils
+synopsis:       open bookmarks and search queries from the command line
+description:
+  This package provides a command-line utility that opens bookmarks and
+  search queries.  Please see the README on GitHub at
+  <https://github.com/ExtremaIS/bm-haskell#readme>.
+
+homepage:       https://github.com/ExtremaIS/bm-haskell#readme
+bug-reports:    https://github.com/ExtremaIS/bm-haskell/issues
+author:         Travis Cardwell <travis.cardwell@extrema.is>
+maintainer:     Travis Cardwell <travis.cardwell@extrema.is>
+copyright:      Copyright (c) 2021 Travis Cardwell
+license:        MIT
+license-file:   LICENSE
+
+cabal-version:  1.24
+build-type:     Simple
+tested-with:
+  GHC ==8.2.2
+   || ==8.4.4
+   || ==8.6.5
+   || ==8.8.4
+   || ==8.10.4
+   || ==9.0.1
+
+extra-source-files:
+  CHANGELOG.md
+  README.md
+
+source-repository head
+  type: git
+  location: https://github.com/ExtremaIS/bm-haskell.git
+
+flag write-hie
+  description: write .hie files
+  default: False
+
+library
+  hs-source-dirs: src
+  exposed-modules:
+      BM
+  other-modules:
+      Paths_bm
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , network-uri
+  default-language: Haskell2010
+  default-extensions:
+      OverloadedStrings
+  if flag(write-hie)
+    ghc-options: -Wall -fwrite-ide-info -hiedir=.hie
+  else
+    ghc-options: -Wall
+
+executable bm
+  hs-source-dirs: app
+  main-is: Main.hs
+  other-modules:
+      LibOA
+  build-depends:
+      ansi-wl-pprint >=0.6 && <0.7
+    , base
+    , bm
+    , directory
+    , filepath
+    , optparse-applicative >=0.14 && <0.17
+    , typed-process
+    , yaml
+  default-language: Haskell2010
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+
+-- test-suite bm-test
+--   type: exitcode-stdio-1.0
+--   hs-source-dirs: test
+--   main-is: Spec.hs
+--   other-modules:
+--   build-depends:
+--       base
+--     , bm
+--     , tasty
+--     , tasty-hunit
+--   default-language: Haskell2010
+--   ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
