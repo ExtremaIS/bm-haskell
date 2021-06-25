@@ -2,9 +2,6 @@
 
 ## Functionality
 
-* Set default command depending on the OS
-    * Windows: `start`
-    * macOS: `open`
 * Add error handling
 * Add `--check` functionality
 * Add CLI completion support?

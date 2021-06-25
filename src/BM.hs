@@ -33,6 +33,7 @@ import qualified Data.Aeson.Types as AT
 import Data.List (find, intercalate, isPrefixOf)
 import Data.Maybe (fromMaybe, listToMaybe)
 import Data.Version (showVersion)
+import qualified System.Info
 
 -- https://hackage.haskell.org/package/network-uri
 import qualified Network.URI as URI
@@ -55,7 +56,10 @@ version = "bm-haskell " ++ showVersion Project.version
 ------------------------------------------------------------------------------
 
 defaultCommand :: Command
-defaultCommand = "xdg-open"
+defaultCommand = case System.Info.os of
+    "mingw32" -> "start"
+    "darwin"  -> "open"
+    _other    -> "xdg-open"
 
 defaultParameter :: ParameterName
 defaultParameter = "q"
