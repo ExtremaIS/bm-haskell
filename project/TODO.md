@@ -3,7 +3,6 @@
 ## Functionality
 
 * Add error handling
-* Add `--check` functionality
 * Add CLI completion support?
 
 ## Tests

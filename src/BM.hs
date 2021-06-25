@@ -14,6 +14,7 @@ module BM
   , Keyword
   , ParameterName
   , ParameterValue
+  , Trace
   , Url
   , Config(..)
   , Bookmark(..)
@@ -35,6 +36,10 @@ import Data.Maybe (fromMaybe, listToMaybe)
 import Data.Version (showVersion)
 import qualified System.Info
 
+-- https://hackage.haskell.org/package/dlist
+import qualified Data.DList as DList
+import Data.DList (DList)
+
 -- https://hackage.haskell.org/package/network-uri
 import qualified Network.URI as URI
 
@@ -43,6 +48,9 @@ import qualified Data.Scientific as Sci
 
 -- https://hackage.haskell.org/package/text
 import qualified Data.Text as T
+
+-- https://hackage.haskell.org/package/transformers
+import Control.Monad.Trans.Writer (Writer, runWriter, tell)
 
 -- (bm:cabal)
 import qualified Paths_bm as Project
@@ -74,6 +82,7 @@ type Error = String
 type Keyword = String
 type ParameterName = String
 type ParameterValue = String
+type Trace = String
 type Url = String
 
 ------------------------------------------------------------------------------
@@ -165,33 +174,52 @@ data Proc
 ------------------------------------------------------------------------------
 -- $API
 
-run :: Config -> [Argument] -> Either Error Proc
-run Config{..} = loop configCommand configArgs
+run
+  :: Config
+  -> [Argument]
+  -> (Either Error Proc, [Trace])
+run Config{..} cliArgs = fmap DList.toList . runWriter $ do
+    trace $ formatCommand configCommand
+    loop configCommand configArgs cliArgs
   where
-    loop :: Command -> [Bookmark] -> [Argument] -> Either Error Proc
+    loop
+      :: Command
+      -> [Bookmark]
+      -> [Argument]
+      -> Writer (DList Trace) (Either Error Proc)
     loop cmd bms (arg:args) = case find (isPrefixOf arg . keyword) bms of
-      Just bm -> case queryOrArgs bm of
-        Left query
-          | null args -> case mUrl bm of
-              Just url -> Right $ openUrl (fromMaybe cmd $ mCommand bm) url
-              Nothing  -> Left $ "no query for " ++ keyword bm
-          | otherwise ->
-              Right $ openQuery (fromMaybe cmd $ mCommand bm) query args
-        Right bms'
-          | null args -> case mUrl bm of
-              Just url -> Right $ openUrl (fromMaybe cmd $ mCommand bm) url
-              Nothing  -> case listToMaybe bms' of
-                Just bm' ->
-                  loop (fromMaybe cmd $ mCommand bm) bms' [keyword bm']
-                Nothing  -> Left $ "no URL for " ++ keyword bm
-          | otherwise -> loop (fromMaybe cmd $ mCommand bm) bms' args
-      Nothing -> Left $ "unknown argument: " ++ arg
-    loop _cmd _bms [] = Left "no arguments"
+      Just bm -> do
+        trace $ formatBookmark bm
+        case queryOrArgs bm of
+          Left query
+            | null args -> case mUrl bm of
+                Just url -> openUrl (fromMaybe cmd $ mCommand bm) url
+                Nothing -> returnError $ "no query for " ++ keyword bm
+            | otherwise -> openQuery (fromMaybe cmd $ mCommand bm) query args
+          Right bms'
+            | null args -> case mUrl bm of
+                Just url -> openUrl (fromMaybe cmd $ mCommand bm) url
+                Nothing  -> case listToMaybe bms' of
+                  Just bm' ->
+                    loop (fromMaybe cmd $ mCommand bm) bms' [keyword bm']
+                  Nothing -> returnError $ "no URL for " ++ keyword bm
+            | otherwise -> loop (fromMaybe cmd $ mCommand bm) bms' args
+      Nothing -> returnError $ "unknown argument: " ++ arg
+    loop _cmd _bms [] = returnError "no arguments"
 
-    openUrl :: Command -> Url -> Proc
-    openUrl cmd url = Proc cmd [url]
+    returnError :: Error -> Writer (DList Trace) (Either Error Proc)
+    returnError = return . Left
 
-    openQuery :: Command -> Query -> [Argument] -> Proc
+    openUrl :: Command -> Url -> Writer (DList Trace) (Either Error Proc)
+    openUrl cmd url = do
+      trace $ unwords [cmd, url]
+      return . Right $ Proc cmd [url]
+
+    openQuery
+      :: Command
+      -> Query
+      -> [Argument]
+      -> Writer (DList Trace) (Either Error Proc)
     openQuery cmd Query{..} args
       = openUrl cmd
       . (action ++)
@@ -199,6 +227,20 @@ run Config{..} = loop configCommand configArgs
       . intercalate "&"
       . map encodeParameter
       $ Parameter parameter (unwords args) : hiddenParameters
+
+    trace :: Trace -> Writer (DList Trace) ()
+    trace = tell . DList.singleton
+
+    formatCommand :: Command -> Trace
+    formatCommand = ('[' :) . (++ "]")
+
+    formatKeyword :: Keyword -> Trace
+    formatKeyword = ('<' :) . (++ ">")
+
+    formatBookmark :: Bookmark -> Trace
+    formatBookmark Bookmark{..} = case mCommand of
+      Just command -> unwords [formatKeyword keyword, formatCommand command]
+      Nothing      -> formatKeyword keyword
 
 ------------------------------------------------------------------------------
 -- $Internal

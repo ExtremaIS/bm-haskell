@@ -4,6 +4,7 @@ module Main (main) where
 
 -- https://hackage.haskell.org/package/base
 import Control.Applicative (optional, some)
+import Control.Monad (when)
 import System.Exit (ExitCode(ExitFailure), exitWith)
 import System.IO (hPutStrLn, stderr)
 
@@ -31,6 +32,7 @@ import qualified LibOA
 data Options
   = Options
     { configOpt :: !(Maybe FilePath)
+    , traceOpt  :: !Bool
     , args      :: ![String]
     }
   deriving Show
@@ -43,6 +45,13 @@ configOption = OA.strOption $ mconcat
     , OA.help "config file (default: $XDG_CONFIG_HOME/bm.yaml)"
     ]
 
+traceOption :: OA.Parser Bool
+traceOption = OA.switch $ mconcat
+    [ OA.long "trace"
+    , OA.short 't'
+    , OA.help "show trace output for debugging"
+    ]
+
 arguments :: OA.Parser [String]
 arguments = some . OA.strArgument $ mconcat
     [ OA.metavar "ARG [ARG ...]"
@@ -52,6 +61,7 @@ arguments = some . OA.strArgument $ mconcat
 options :: OA.Parser Options
 options = Options
     <$> optional configOption
+    <*> traceOption
     <*> arguments
 
 ------------------------------------------------------------------------------
@@ -77,7 +87,9 @@ main = do
       Just path -> pure path
       Nothing -> Dir.getXdgDirectory Dir.XdgConfig "bm.yaml"
     config <- Yaml.decodeFileThrow configPath
-    either errorExit runProc $ BM.run config args
+    let (eep, traceLines) = BM.run config args
+    when traceOpt $ mapM_ putStrLn traceLines
+    either errorExit runProc eep
   where
     pinfo :: OA.ParserInfo Options
     pinfo

@@ -46,9 +46,11 @@ library
   build-depends:
       aeson
     , base >=4.7 && <5
+    , dlist
     , network-uri
     , scientific
     , text
+    , transformers
   default-language: Haskell2010
   default-extensions:
       OverloadedStrings
