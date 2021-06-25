@@ -2,8 +2,11 @@
 
 ## Functionality
 
-* Add error handling
+* Use `Text` instead of `String`?
+    * Only switch if it (significantly) improves performance
 * Add CLI completion support?
+    * <https://github.com/pcapriotti/optparse-applicative/wiki/Bash-Completion>
+* Add error handling
 
 ## Tests
 
