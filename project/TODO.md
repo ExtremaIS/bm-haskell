@@ -2,7 +2,6 @@
 
 ## Functionality
 
-* Coerce `keyword` scalar values to string
 * Select first child if no URL/query
 * Set default command depending on the OS
     * Windows: `start`

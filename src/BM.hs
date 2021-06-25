@@ -1,5 +1,7 @@
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TypeApplications #-}
 
 module BM
   ( -- * Constants
@@ -25,6 +27,7 @@ module BM
 -- https://hackage.haskell.org/package/aeson
 import qualified Data.Aeson as A
 import Data.Aeson (FromJSON, (.:), (.:?), (.!=))
+import qualified Data.Aeson.Types as AT
 
 -- https://hackage.haskell.org/package/base
 import Data.List (find, intercalate, isPrefixOf)
@@ -33,6 +36,12 @@ import Data.Version (showVersion)
 
 -- https://hackage.haskell.org/package/network-uri
 import qualified Network.URI as URI
+
+-- https://hackage.haskell.org/package/scientific
+import qualified Data.Scientific as Sci
+
+-- https://hackage.haskell.org/package/text
+import qualified Data.Text as T
 
 -- (bm:cabal)
 import qualified Paths_bm as Project
@@ -91,7 +100,7 @@ data Bookmark
 
 instance FromJSON Bookmark where
   parseJSON = A.withObject "Bookmark" $ \o -> do
-    keyword  <- o .:  "keyword"
+    keyword  <- parseToString =<< o .: "keyword"
     mCommand <- o .:? "command"
     mUrl     <- o .:? "url"
     mQuery   <- o .:? "query"
@@ -134,7 +143,7 @@ instance FromJSON Parameter where
   parseJSON = A.withObject "Parameter" $ \o ->
     Parameter
       <$> o .: "name"
-      <*> o .: "value"
+      <*> (parseToString =<< o .: "value")
 
 encodeParameter :: Parameter -> String
 encodeParameter Parameter{..} =
@@ -183,3 +192,20 @@ run Config{..} = loop configCommand configArgs
       . intercalate "&"
       . map encodeParameter
       $ Parameter parameter (unwords args) : hiddenParameters
+
+------------------------------------------------------------------------------
+-- $Internal
+
+-- | Parse any scalar value as a string
+--
+-- Strings, numbers, booleans, and null are parsed as a string.  Empty
+-- strings, arrays, and objects result in an error.
+parseToString :: A.Value -> AT.Parser String
+parseToString = \case
+    (A.String t)  -> pure $ T.unpack t
+    (A.Number n)  -> pure . either (show @Double) (show @Integer) $
+      Sci.floatingOrInteger n
+    (A.Bool b)    -> pure $ if b then "true" else "false"
+    A.Null        -> pure "null"
+    A.Array{}     -> fail "unexpected array"
+    A.Object{}    -> fail "unexpected object"

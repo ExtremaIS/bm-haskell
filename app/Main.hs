@@ -10,9 +10,6 @@ import System.IO (hPutStrLn, stderr)
 -- https://hackage.haskell.org/package/directory
 import qualified System.Directory as Dir
 
--- https://hackage.haskell.org/package/filepath
-import System.FilePath ((</>))
-
 -- https://hackage.haskell.org/package/optparse-applicative
 import qualified Options.Applicative as OA
 
