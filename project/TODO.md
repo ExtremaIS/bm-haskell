@@ -2,6 +2,7 @@
 
 ## Functionality
 
+* Fix: `URI.escapeURIString` not encoding spaces?
 * Use `Text` instead of `String`?
     * Only switch if it (significantly) improves performance
 * Add CLI completion support?
