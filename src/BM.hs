@@ -159,8 +159,12 @@ instance FromJSON Parameter where
       <*> (parseToString =<< o .: "value")
 
 encodeParameter :: Parameter -> String
-encodeParameter Parameter{..} =
-    name ++ "=" ++ URI.escapeURIString URI.isUnreserved value
+encodeParameter Parameter{..} = encodePart name ++ "=" ++ encodePart value
+  where
+    encodePart :: String -> String
+    encodePart
+      = map (\c -> if c == ' ' then '+' else c)
+      . URI.escapeURIString ((||) <$> URI.isUnreserved <*> (== ' '))
 
 ------------------------------------------------------------------------------
 
