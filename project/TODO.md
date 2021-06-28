@@ -2,9 +2,12 @@
 
 ## Functionality
 
-* Add CLI completion support?
-    * <https://github.com/pcapriotti/optparse-applicative/wiki/Bash-Completion>
 * Add error handling
+
+* Add CLI completion support
+    * Unfortunately, `optparse-applicative` completion support does not
+      provide a way to generate a completion reply based on *all* of the
+      arguments.  A custom implementation is required.
 
 ## Tests
 
