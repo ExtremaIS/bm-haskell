@@ -2,8 +2,6 @@
 
 ## Functionality
 
-* Add error handling
-
 * Add CLI completion support
     * Unfortunately, `optparse-applicative` completion support does not
       provide a way to generate a completion reply based on *all* of the

@@ -86,10 +86,16 @@ main = do
     configPath <- case configOpt of
       Just path -> pure path
       Nothing -> Dir.getXdgDirectory Dir.XdgConfig "bm.yaml"
-    config <- Yaml.decodeFileThrow configPath
-    let (eep, traceLines) = BM.run config args
-    when traceOpt $ mapM_ (hPutStrLn stderr) traceLines
-    either errorExit runProc eep
+    eec <- Yaml.decodeFileEither configPath
+    case eec of
+      Right config -> do
+        let (eep, traceLines) = BM.run config args
+        when traceOpt $ mapM_ (hPutStrLn stderr) traceLines
+        either errorExit runProc eep
+      Left parseException -> do
+        hPutStrLn stderr $ "error parsing config file: " ++ configPath
+        hPutStrLn stderr $ Yaml.prettyPrintParseException parseException
+        exitWith $ ExitFailure 1
   where
     pinfo :: OA.ParserInfo Options
     pinfo
