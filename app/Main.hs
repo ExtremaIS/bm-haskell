@@ -14,7 +14,7 @@ module Main (main) where
 
 -- https://hackage.haskell.org/package/base
 import Control.Applicative (optional, some)
-import Control.Monad (when)
+import Control.Monad (unless, when)
 import System.Exit (ExitCode(ExitFailure), exitWith)
 import System.IO (hPutStrLn, stderr)
 
@@ -96,6 +96,8 @@ main = do
     configPath <- case configOpt of
       Just path -> pure path
       Nothing -> Dir.getXdgDirectory Dir.XdgConfig "bm.yaml"
+    exists <- Dir.doesFileExist configPath
+    unless exists . errorExit $ "configuration file not found: " ++ configPath
     eec <- Yaml.decodeFileEither configPath
     case eec of
       Right config -> do
