@@ -14,7 +14,6 @@
 
 ## Documentation
 
-* API documentation
 * README
 * Manual
 * Design log

@@ -1,3 +1,13 @@
+------------------------------------------------------------------------------
+-- |
+-- Module      : Main
+-- Description : bm: open bookmarks and queries from the command line
+-- Copyright   : Copyright (c) 2021 Travis Cardwell
+-- License     : MIT
+--
+-- See the README for details.
+------------------------------------------------------------------------------
+
 {-# LANGUAGE RecordWildCards #-}
 
 module Main (main) where
@@ -102,7 +112,6 @@ main = do
       = OA.info (LibOA.helper <*> LibOA.versioner BM.version <*> options)
       $ mconcat
           [ OA.fullDesc
-          , OA.progDesc
-              "open bookmarks and search queries from the command line"
+          , OA.progDesc "open bookmarks and queries from the command line"
           , OA.failureCode 2
           ]

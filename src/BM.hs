@@ -1,3 +1,11 @@
+------------------------------------------------------------------------------
+-- |
+-- Module      : BM
+-- Description : API
+-- Copyright   : Copyright (c) 2021 Travis Cardwell
+-- License     : MIT
+------------------------------------------------------------------------------
+
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
@@ -7,7 +15,6 @@ module BM
   ( -- * Constants
     version
     -- * Types
-  , Action
   , Argument
   , Command
   , Error
@@ -58,35 +65,75 @@ import qualified Paths_bm as Project
 ------------------------------------------------------------------------------
 -- $Constants
 
+-- | bm version string (\"@bm-haskell X.X.X.X@\")
 version :: String
 version = "bm-haskell " ++ showVersion Project.version
 
 ------------------------------------------------------------------------------
 
+-- | Default command, depending on the OS
 defaultCommand :: Command
 defaultCommand = case System.Info.os of
     "mingw32" -> "start"
     "darwin"  -> "open"
     _other    -> "xdg-open"
 
+-- | Default query parameter name
 defaultParameter :: ParameterName
 defaultParameter = "q"
 
 ------------------------------------------------------------------------------
 -- $Types
+--
+-- This implementation makes heavy use of the 'String' type.  Type aliases are
+-- provided to make the API easier to read.
 
-type Action = String
+-- | CLI argument or process argument
 type Argument = String
+
+-- | Process command
+--
+-- This command is executed with a single URL argument to open a
+-- bookmark/query.
 type Command = FilePath
+
+-- | Error message
 type Error = String
+
+-- | Bookmark keyword
+--
+-- The configuration file defines a hierarchy of keywords that are matched
+-- against CLI arguments to determine which bookmark/query to open.
 type Keyword = String
+
+-- | Query parameter name
 type ParameterName = String
+
+-- | Query parameter value
 type ParameterValue = String
+
+-- | Trace line for debugging
 type Trace = String
+
+-- | Bookmark or query action URL
 type Url = String
 
 ------------------------------------------------------------------------------
 
+-- | Configuration
+--
+-- YAML attributes:
+--
+-- * @command@: top-level command (string, default depends on the OS)
+-- * @args@: bookmarks (array of 'Bookmark')
+--
+-- Default commands:
+--
+-- * Linux: @xdg-open@
+-- * Windows: @start@
+-- * macOS: @open@
+--
+-- @since 0.1.0.0
 data Config
   = Config
     { configCommand :: !Command
@@ -102,6 +149,21 @@ instance FromJSON Config where
 
 ------------------------------------------------------------------------------
 
+-- | Bookmark definition
+--
+-- YAML attributes:
+--
+-- * @keyword@: bookmark keyword (string)
+-- * @command@: command for this bookmark and children (string, optional)
+-- * @url@: bookmark URL (string, optional)
+-- * @query@: bookmark query definition ('Query', optional)
+-- * @args@: child bookmarks (array of 'Bookmark', optional)
+--
+-- A command be set to override the top-level command, but this is generally
+-- not done.  If a bookmark is selected and there is no URL, the first child
+-- is processed.  Only one of @query@ and @args@ may be present.
+--
+-- @since 0.1.0.0
 data Bookmark
   = Bookmark
     { keyword     :: !Keyword
@@ -128,9 +190,18 @@ instance FromJSON Bookmark where
 
 ------------------------------------------------------------------------------
 
+-- | Query definition
+--
+-- YAML attributes:
+--
+-- * @action@: URL (string)
+-- * @parameter@: query parameter name (string, default: @q@)
+-- * @hidden@: array of constant parameters ('Parameter')
+--
+-- @since 0.1.0.0
 data Query
   = Query
-    { action           :: !Action
+    { action           :: !Url
     , parameter        :: !ParameterName
     , hiddenParameters :: ![Parameter]
     }
@@ -145,6 +216,14 @@ instance FromJSON Query where
 
 ------------------------------------------------------------------------------
 
+-- | HTTP GET parameter definition
+--
+-- YAML attributes:
+--
+-- * @name@: parameter name
+-- * @value@: constant parameter value
+--
+-- @since 0.1.0.0
 data Parameter
   = Parameter
     { name  :: !ParameterName
@@ -158,6 +237,10 @@ instance FromJSON Parameter where
       <$> o .: "name"
       <*> (parseToString =<< o .: "value")
 
+-- | Encode an HTTP GET parameter
+--
+-- Spaces are transformed to plus characters, and other reserved characters
+-- are escaped.
 encodeParameter :: Parameter -> String
 encodeParameter Parameter{..} = encodePart name ++ "=" ++ encodePart value
   where
@@ -168,6 +251,9 @@ encodeParameter Parameter{..} = encodePart name ++ "=" ++ encodePart value
 
 ------------------------------------------------------------------------------
 
+-- | Process specification
+--
+-- @since 0.1.0.0
 data Proc
   = Proc
     { command   :: !Command
@@ -178,6 +264,9 @@ data Proc
 ------------------------------------------------------------------------------
 -- $API
 
+-- | Determine the process to execute for the given config and CLI arguments
+--
+-- @since 0.1.0.0
 run
   :: Config
   -> [Argument]
@@ -251,8 +340,8 @@ run Config{..} cliArgs = fmap DList.toList . runWriter $ do
 
 -- | Parse any scalar value as a string
 --
--- Strings, numbers, booleans, and null are parsed as a string.  Empty
--- strings, arrays, and objects result in an error.
+-- Strings, numbers, booleans, and null are parsed as a string.  Arrays and
+-- objects result in an error.
 parseToString :: A.Value -> AT.Parser String
 parseToString = \case
     (A.String t)  -> pure $ T.unpack t

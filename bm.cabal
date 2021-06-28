@@ -1,10 +1,10 @@
 name:           bm
 version:        0.0.0.0
 category:       Utils
-synopsis:       open bookmarks and search queries from the command line
+synopsis:       open bookmarks and queries from the command line
 description:
   This package provides a command-line utility that opens bookmarks and
-  search queries.  Please see the README on GitHub at
+  queries.  Please see the README on GitHub at
   <https://github.com/ExtremaIS/bm-haskell#readme>.
 
 homepage:       https://github.com/ExtremaIS/bm-haskell#readme
