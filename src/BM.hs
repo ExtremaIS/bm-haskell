@@ -30,6 +30,7 @@ module BM
   , Proc(..)
     -- * API
   , run
+  , getCompletion
   ) where
 
 -- https://hackage.haskell.org/package/aeson
@@ -334,6 +335,26 @@ run Config{..} cliArgs = fmap DList.toList . runWriter $ do
     formatBookmark Bookmark{..} = case mCommand of
       Just command -> unwords [formatKeyword keyword, formatCommand command]
       Nothing      -> formatKeyword keyword
+
+------------------------------------------------------------------------------
+
+-- | Get CLI completion options
+--
+-- @since 0.1.0.0
+getCompletion
+  :: Config
+  -> [Argument]  -- ^ current CLI arguments, last one being completed
+  -> [Argument]  -- ^ completion options
+getCompletion Config{..} = loop configArgs
+  where
+    loop :: [Bookmark] -> [Argument] -> [Argument]
+    loop bms [arg] = filter (isPrefixOf arg) $ map keyword bms
+    loop bms (arg:args) = case find (isPrefixOf arg . keyword) bms of
+      Just bm -> case queryOrArgs bm of
+        Left{} -> []
+        Right bms' -> loop bms' args
+      Nothing -> []
+    loop _bms [] = []
 
 ------------------------------------------------------------------------------
 -- $Internal

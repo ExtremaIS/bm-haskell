@@ -8,6 +8,7 @@
 -- See the README for details.
 ------------------------------------------------------------------------------
 
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE RecordWildCards #-}
 
 module Main (main) where
@@ -15,14 +16,18 @@ module Main (main) where
 -- https://hackage.haskell.org/package/base
 import Control.Applicative (optional, some)
 import Control.Monad (unless, when)
-import System.Exit (ExitCode(ExitFailure), exitWith)
+import Data.List (find, isInfixOf, isPrefixOf, uncons)
+import System.Environment (getArgs)
+import System.Exit (ExitCode(ExitFailure), exitSuccess, exitWith)
 import System.IO (hPutStrLn, stderr)
+import Text.Read (readMaybe)
 
 -- https://hackage.haskell.org/package/directory
 import qualified System.Directory as Dir
 
 -- https://hackage.haskell.org/package/optparse-applicative
 import qualified Options.Applicative as OA
+import qualified Options.Applicative.Types as OAT
 
 -- https://hackage.haskell.org/package/typed-process
 import qualified System.Process.Typed as TP
@@ -75,6 +80,137 @@ options = Options
     <*> arguments
 
 ------------------------------------------------------------------------------
+-- $Completion
+
+handleCompletion :: [String] -> IO (Either OA.ParseError [String])
+handleCompletion args = case find isOAOption optArgs of
+    Just arg ->
+      return . Left $ OA.UnexpectedError arg (OAT.SomeParser options)
+    Nothing
+      | "--complete"      `elem` optArgs -> handleComplete args
+      | "--complete-bash" `elem` optArgs -> handleCompleteBash args
+      | otherwise                        -> return $ Right args
+  where
+    optArgs :: [String]
+    optArgs = takeWhile (/= "--") args
+
+    isOAOption :: String -> Bool
+    isOAOption =
+      (&&) <$> ("--" `isPrefixOf`) <*> ("completion" `isInfixOf`)
+
+handleComplete :: [String] -> IO a
+handleComplete = \case
+    "--complete" : idxArg : args -> do
+      idx <- case readMaybe idxArg of
+        Just n | n > 0 -> return n
+        _invalidIdx    -> errorExit $ "invalid index: " ++ idxArg
+      goOpts Nothing [] (idx - 1) (drop 1 args)
+    _invalidArgs -> do
+      mapM_ (hPutStrLn stderr)
+        [ "Usage: bm --complete INDEX [ARG ...]"
+        , "  get completion options"
+        , ""
+        , "Use one of the following commands to enable bm completion:"
+        , "  * bm --complete-bash"
+        ]
+      exitWith $ ExitFailure 2
+  where
+    longOpts, shortOpts :: [String]
+    longOpts = ["--help", "--version", "--config", "--trace"]
+    shortOpts = ["-h", "-v", "-c", "-t"]
+
+    goOpts :: Maybe FilePath -> [String] -> Int -> [String] -> IO a
+    goOpts mConfigPath bmArgsAcc 0 (arg:_args) = do
+      when (arg `elem` ["-", "--"]) $ reply longOpts
+      when (arg `elem` shortOpts) $ reply [arg]
+      case find (isPrefixOf arg) longOpts of
+        Just longOpt -> reply [longOpt]
+        Nothing -> return ()
+      when ("-" `isPrefixOf` arg) $ reply []
+      goBM mConfigPath $ reverse (arg : bmArgsAcc)
+    goOpts mConfigPath bmArgsAcc 0 [] =
+      goBM mConfigPath $ reverse ("" : bmArgsAcc)
+    goOpts mConfigPath bmArgsAcc idx (arg:args)
+      | arg == "--" = goArgs mConfigPath bmArgsAcc (idx - 1) args
+      | arg `elem` ["-c", "--config"] = if idx == 1
+          then reply []
+          else case uncons args of
+            Just (configPath, args') ->
+              goOpts (Just configPath) bmArgsAcc (idx -2) args'
+            Nothing -> reply []
+      | "-" `isPrefixOf` arg = goOpts mConfigPath bmArgsAcc (idx -1) args
+      | otherwise = goOpts mConfigPath (arg : bmArgsAcc) (idx - 1) args
+    goOpts _mConfigPath _bmArgsAcc _idx [] = reply []
+
+    goArgs :: Maybe FilePath -> [String] -> Int -> [String] -> IO a
+    goArgs mConfigPath bmArgsAcc 0 (arg:_args) =
+      goBM mConfigPath $ reverse (arg : bmArgsAcc)
+    goArgs mConfigPath bmArgsAcc 0 [] =
+      goBM mConfigPath $ reverse ("" : bmArgsAcc)
+    goArgs mConfigPath bmArgsAcc idx (arg:args) =
+      goArgs mConfigPath (arg : bmArgsAcc) (idx - 1) args
+    goArgs _mConfigPath _bmArgsAcc _idx [] = reply []
+
+    goBM :: Maybe FilePath -> [String] -> IO a
+    goBM mConfigPath args =  do
+      configPath <- case mConfigPath of
+        Just path -> pure path
+        Nothing -> Dir.getXdgDirectory Dir.XdgConfig "bm.yaml"
+      exists <- Dir.doesFileExist configPath
+      when exists $ do
+        eec <- Yaml.decodeFileEither configPath
+        case eec of
+          Right config -> mapM_ putStrLn $ BM.getCompletion config args
+          Left{} -> return ()
+      exitSuccess
+
+    reply :: [String] -> IO a
+    reply choices = do
+      mapM_ putStrLn choices
+      exitSuccess
+
+handleCompleteBash :: [String] -> IO a
+handleCompleteBash = \case
+    ["--complete-bash", path] | not ("-" `isPrefixOf` path) -> do
+      mapM_ putStrLn
+        [ "_bm() {"
+        , "    local IFS=$'\\n'"
+        , "    local CMDLINE=( --complete ${COMP_CWORD} ${COMP_WORDS[@]} )"
+        , "    COMPREPLY=( $(\"" ++ path ++ "\" \"${CMDLINE[@]}\") )"
+        , "}"
+        , ""
+        , "complete -o filenames -F _bm bm"
+        ]
+      exitSuccess
+    _invalidArgs -> do
+      mapM_ (hPutStrLn stderr)
+        [ "Usage: bm --complete-bash PATH"
+        , "  print a Bash script to enable bm completion"
+        , ""
+        , "Example usage:"
+        , ""
+        , "  $ source <(bm --complete-bash `which bm`)"
+        ]
+      exitWith $ ExitFailure 2
+
+parseArgs :: IO Options
+parseArgs = do
+    eeas <- handleCompletion =<< getArgs
+    OA.handleParseResult $ case eeas of
+      Right args -> OA.execParserPure OA.defaultPrefs pinfo args
+      Left parseError ->
+        OA.Failure $ OA.parserFailure OA.defaultPrefs pinfo parseError mempty
+  where
+    pinfo :: OA.ParserInfo Options
+    pinfo
+      = OA.info (LibOA.helper <*> LibOA.versioner BM.version <*> options)
+      $ mconcat
+          [ OA.fullDesc
+          , OA.progDesc "open bookmarks and queries from the command line"
+          , OA.failureCode 2
+          ]
+
+------------------------------------------------------------------------------
 -- $Main
 
 errorExit :: String -> IO a
@@ -92,7 +228,7 @@ runProc proc
 
 main :: IO ()
 main = do
-    Options{..} <- OA.execParser pinfo
+    Options{..} <- parseArgs
     configPath <- case configOpt of
       Just path -> pure path
       Nothing -> Dir.getXdgDirectory Dir.XdgConfig "bm.yaml"
@@ -108,12 +244,3 @@ main = do
         hPutStrLn stderr $ "error parsing config file: " ++ configPath
         hPutStrLn stderr $ Yaml.prettyPrintParseException parseException
         exitWith $ ExitFailure 1
-  where
-    pinfo :: OA.ParserInfo Options
-    pinfo
-      = OA.info (LibOA.helper <*> LibOA.versioner BM.version <*> options)
-      $ mconcat
-          [ OA.fullDesc
-          , OA.progDesc "open bookmarks and queries from the command line"
-          , OA.failureCode 2
-          ]
