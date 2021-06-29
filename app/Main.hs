@@ -15,8 +15,8 @@ module Main (main) where
 
 -- https://hackage.haskell.org/package/base
 import Control.Applicative (optional, some)
-import Control.Monad (unless, when)
-import Data.List (find, isInfixOf, isPrefixOf, uncons)
+import Control.Monad (forM_, unless, when)
+import Data.List (find, isInfixOf, isPrefixOf, sort, uncons)
 import System.Environment (getArgs)
 import System.Exit (ExitCode(ExitFailure), exitSuccess, exitWith)
 import System.IO (hPutStrLn, stderr)
@@ -24,6 +24,10 @@ import Text.Read (readMaybe)
 
 -- https://hackage.haskell.org/package/directory
 import qualified System.Directory as Dir
+
+-- https://hackage.haskell.org/package/filepath
+import qualified System.FilePath as FP
+import System.FilePath ((</>))
 
 -- https://hackage.haskell.org/package/optparse-applicative
 import qualified Options.Applicative as OA
@@ -132,12 +136,11 @@ handleComplete = \case
       goBM mConfigPath $ reverse ("" : bmArgsAcc)
     goOpts mConfigPath bmArgsAcc idx (arg:args)
       | arg == "--" = goArgs mConfigPath bmArgsAcc (idx - 1) args
-      | arg `elem` ["-c", "--config"] = if idx == 1
-          then reply []
-          else case uncons args of
-            Just (configPath, args') ->
-              goOpts (Just configPath) bmArgsAcc (idx -2) args'
-            Nothing -> reply []
+      | arg `elem` ["-c", "--config"] = case uncons args of
+          Just (configPath, args')
+            | idx == 1  -> goConfig configPath
+            | otherwise -> goOpts (Just configPath) bmArgsAcc (idx -2) args'
+          Nothing -> goConfig "./"
       | "-" `isPrefixOf` arg = goOpts mConfigPath bmArgsAcc (idx -1) args
       | otherwise = goOpts mConfigPath (arg : bmArgsAcc) (idx - 1) args
     goOpts _mConfigPath _bmArgsAcc _idx [] = reply []
@@ -150,6 +153,35 @@ handleComplete = \case
     goArgs mConfigPath bmArgsAcc idx (arg:args) =
       goArgs mConfigPath (arg : bmArgsAcc) (idx - 1) args
     goArgs _mConfigPath _bmArgsAcc _idx [] = reply []
+
+    goConfig :: FilePath -> IO a
+    goConfig arg = do
+      isDir <- Dir.doesDirectoryExist arg
+      when isDir $ do
+        entries <- sort <$> Dir.listDirectory arg
+        forM_ entries $ \entry -> do
+          let arg' = arg </> entry
+          isDir' <- Dir.doesDirectoryExist arg'
+          if isDir'
+            then putStrLn $ FP.addTrailingPathSeparator arg'
+            else when (".yaml" `FP.isExtensionOf` entry) $ putStrLn arg'
+        exitSuccess
+      unless (FP.hasTrailingPathSeparator arg) $ do
+        isFile <- Dir.doesFileExist arg
+        if isFile
+          then when (".yaml" `FP.isExtensionOf` arg) $ putStrLn arg
+          else do
+            let (dir, partial) = FP.splitFileName arg
+            isDirDir <- Dir.doesDirectoryExist dir
+            when isDirDir $ do
+              entries <- sort <$> Dir.listDirectory dir
+              forM_ (filter (isPrefixOf partial) entries) $ \entry -> do
+                let arg' = dir </> entry
+                isDir' <- Dir.doesDirectoryExist arg'
+                if isDir'
+                  then putStrLn $ FP.addTrailingPathSeparator arg'
+                  else when (".yaml" `FP.isExtensionOf` entry) $ putStrLn arg'
+      exitSuccess
 
     goBM :: Maybe FilePath -> [String] -> IO a
     goBM mConfigPath args =  do
