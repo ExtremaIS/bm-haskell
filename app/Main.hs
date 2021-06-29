@@ -174,12 +174,11 @@ handleCompleteBash = \case
     ["--complete-bash", path] | not ("-" `isPrefixOf` path) -> do
       mapM_ putStrLn
         [ "_bm() {"
-        , "    local IFS=$'\\n'"
-        , "    local CMDLINE=( --complete ${COMP_CWORD} ${COMP_WORDS[@]} )"
-        , "    COMPREPLY=( $(\"" ++ path ++ "\" \"${CMDLINE[@]}\") )"
+        , "mapfile -t COMPREPLY < <(\"" ++ path ++
+          "\" --complete ${COMP_CWORD} ${COMP_WORDS[@]})"
         , "}"
         , ""
-        , "complete -o filenames -F _bm bm"
+        , "complete -F _bm bm"
         ]
       exitSuccess
     _invalidArgs -> do
