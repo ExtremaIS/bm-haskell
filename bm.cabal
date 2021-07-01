@@ -45,7 +45,7 @@ library
       Paths_bm
   build-depends:
       aeson
-    , base >=4.7 && <5
+    , base
     , dlist
     , network-uri
     , scientific
@@ -65,12 +65,12 @@ executable bm
   other-modules:
       LibOA
   build-depends:
-      ansi-wl-pprint >=0.6 && <0.7
+      ansi-wl-pprint
     , base
     , bm
     , directory
     , filepath
-    , optparse-applicative >=0.14 && <0.17
+    , optparse-applicative
     , typed-process
     , yaml
   default-language: Haskell2010

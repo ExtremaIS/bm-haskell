@@ -13,7 +13,6 @@
 
 ## Project
 
-* Add dependency constraints
 * Deb package
 * RPM package
 * Nix configuration
