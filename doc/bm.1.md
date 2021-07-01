@@ -112,6 +112,12 @@ Parameter objects have the following properties:
 
 Any scalar value can be used to define a `value`.
 
+# COMPLETION
+
+Run the following command to enable Bash completion:
+
+    $ source <(bm --complete-bash `which bm`)
+
 # TRACING
 
 The `--trace` option shows trace output for debugging.  Commands are displayed
