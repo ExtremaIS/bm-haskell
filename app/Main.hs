@@ -131,7 +131,7 @@ handleComplete = \case
   where
     longOpts, shortOpts :: [String]
     longOpts = ["--help", "--version", "--config", "--trace"]
-    shortOpts = ["-h", "-v", "-c", "-t"]
+    shortOpts = ["-h", "-c", "-t"]
 
     goOpts :: Maybe FilePath -> [String] -> Int -> [String] -> IO a
     goOpts mConfigPath bmArgsAcc 0 (arg:_args) = do
