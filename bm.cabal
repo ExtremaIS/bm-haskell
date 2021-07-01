@@ -76,15 +76,16 @@ executable bm
   default-language: Haskell2010
   ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
 
--- test-suite bm-test
---   type: exitcode-stdio-1.0
---   hs-source-dirs: test
---   main-is: Spec.hs
---   other-modules:
---   build-depends:
---       base
---     , bm
---     , tasty
---     , tasty-hunit
---   default-language: Haskell2010
---   ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+test-suite bm-test
+  type: exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is: Spec.hs
+  other-modules:
+      BM.Test
+  build-depends:
+      base
+    , bm
+    , tasty
+    , tasty-hunit
+  default-language: Haskell2010
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N

@@ -260,7 +260,7 @@ data Proc
     { command   :: !Command
     , arguments :: ![Argument]
     }
-  deriving Show
+  deriving (Eq, Show)
 
 ------------------------------------------------------------------------------
 -- $API

@@ -4,7 +4,6 @@
 
 ## Tests
 
-* Add tests
 * Add CI
 
 ## Documentation
