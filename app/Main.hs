@@ -218,7 +218,8 @@ handleComplete = \case
 
     reply :: [String] -> IO a
     reply choices = do
-      mapM_ putStrLn $ show CompleteDefault : choices
+      print CompleteDefault
+      mapM_ putStrLn choices
       exitSuccess
 
 handleCompleteBash :: [String] -> IO a
