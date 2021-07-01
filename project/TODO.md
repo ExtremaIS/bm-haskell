@@ -9,7 +9,6 @@
 ## Documentation
 
 * README
-* Manual
 * Design log
 
 ## Project
