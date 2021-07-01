@@ -15,8 +15,9 @@ module Main (main) where
 
 -- https://hackage.haskell.org/package/base
 import Control.Applicative (optional, some)
-import Control.Monad (forM_, unless, when)
+import Control.Monad (forM, unless, when)
 import Data.List (find, isInfixOf, isPrefixOf, sort, uncons)
+import Data.Maybe (catMaybes)
 import System.Environment (getArgs)
 import System.Exit (ExitCode(ExitFailure), exitSuccess, exitWith)
 import System.IO (hPutStrLn, stderr)
@@ -86,6 +87,15 @@ options = Options
 ------------------------------------------------------------------------------
 -- $Completion
 
+data CompletionOption
+  = CompleteDefault
+  | CompleteNoSpace
+
+instance Show CompletionOption where
+  show = \case
+    CompleteDefault -> "DEFAULT"
+    CompleteNoSpace -> "NOSPACE"
+
 handleCompletion :: [String] -> IO (Either OA.ParseError [String])
 handleCompletion args = case find isOAOption optArgs of
     Just arg ->
@@ -138,7 +148,7 @@ handleComplete = \case
       | arg == "--" = goArgs mConfigPath bmArgsAcc (idx - 1) args
       | arg `elem` ["-c", "--config"] = case uncons args of
           Just (configPath, args')
-            | idx == 1  -> goConfig configPath
+            | idx == 1  -> goConfig =<< expandHomeDirectory configPath
             | otherwise -> goOpts (Just configPath) bmArgsAcc (idx -2) args'
           Nothing -> goConfig "./"
       | "-" `isPrefixOf` arg = goOpts mConfigPath bmArgsAcc (idx -1) args
@@ -154,37 +164,47 @@ handleComplete = \case
       goArgs mConfigPath (arg : bmArgsAcc) (idx - 1) args
     goArgs _mConfigPath _bmArgsAcc _idx [] = reply []
 
+    expandHomeDirectory :: FilePath -> IO FilePath
+    expandHomeDirectory arg = case uncons (FP.splitPath arg) of
+      Just (part, parts)
+        | part `elem` ["~", "~/"] -> do
+            homeDir <- Dir.getHomeDirectory
+            return . FP.joinPath $ homeDir : parts
+      _otherwise -> return arg
+
     goConfig :: FilePath -> IO a
     goConfig arg = do
       isDir <- Dir.doesDirectoryExist arg
-      when isDir $ do
-        entries <- sort <$> Dir.listDirectory arg
-        forM_ entries $ \entry -> do
-          let arg' = arg </> entry
-          isDir' <- Dir.doesDirectoryExist arg'
-          if isDir'
-            then putStrLn $ FP.addTrailingPathSeparator arg'
-            else when (".yaml" `FP.isExtensionOf` entry) $ putStrLn arg'
-        exitSuccess
-      unless (FP.hasTrailingPathSeparator arg) $ do
-        isFile <- Dir.doesFileExist arg
-        if isFile
-          then when (".yaml" `FP.isExtensionOf` arg) $ putStrLn arg
-          else do
-            let (dir, partial) = FP.splitFileName arg
-            isDirDir <- Dir.doesDirectoryExist dir
-            when isDirDir $ do
-              entries <- sort <$> Dir.listDirectory dir
-              forM_ (filter (isPrefixOf partial) entries) $ \entry -> do
-                let arg' = dir </> entry
-                isDir' <- Dir.doesDirectoryExist arg'
-                if isDir'
-                  then putStrLn $ FP.addTrailingPathSeparator arg'
-                  else when (".yaml" `FP.isExtensionOf` entry) $ putStrLn arg'
-      exitSuccess
+      when isDir $
+        goConfigDir . map (arg </>) . sort =<< Dir.listDirectory arg
+      when (FP.hasTrailingPathSeparator arg) $ reply []
+      isFile <- Dir.doesFileExist arg
+      when isFile $ reply [arg | ".yaml" `FP.isExtensionOf` arg]
+      let (dir, partial) = FP.splitFileName arg
+      isDirDir <- Dir.doesDirectoryExist dir
+      unless isDirDir $ reply []
+      goConfigDir . map (dir </>) . sort . filter (isPrefixOf partial)
+        =<< Dir.listDirectory dir
+
+    goConfigDir :: [FilePath] -> IO a
+    goConfigDir paths = do
+      dirOrFiles <- fmap catMaybes . forM paths $ \path -> do
+          isDir <- Dir.doesDirectoryExist path
+          return $ if isDir
+            then Just . Left $ FP.addTrailingPathSeparator path
+            else if ".yaml" `FP.isExtensionOf` path
+              then Just $ Right path
+              else Nothing
+      case dirOrFiles of
+        [Right path] -> reply [path]
+        _otherwise -> do
+          print CompleteNoSpace
+          mapM_ (putStrLn . either id id) dirOrFiles
+          exitSuccess
 
     goBM :: Maybe FilePath -> [String] -> IO a
     goBM mConfigPath args =  do
+      print CompleteDefault
       configPath <- case mConfigPath of
         Just path -> pure path
         Nothing -> Dir.getXdgDirectory Dir.XdgConfig "bm.yaml"
@@ -198,7 +218,7 @@ handleComplete = \case
 
     reply :: [String] -> IO a
     reply choices = do
-      mapM_ putStrLn choices
+      mapM_ putStrLn $ show CompleteDefault : choices
       exitSuccess
 
 handleCompleteBash :: [String] -> IO a
@@ -208,6 +228,9 @@ handleCompleteBash = \case
         [ "_bm() {"
         , "mapfile -t COMPREPLY < <(\"" ++ path ++
           "\" --complete ${COMP_CWORD} ${COMP_WORDS[@]})"
+        , "test \"${COMPREPLY[0]}\" != \"" ++ show CompleteNoSpace ++
+          "\" || compopt -o nospace"
+        , "unset \"COMPREPLY[0]\""
         , "}"
         , ""
         , "complete -F _bm bm"
