@@ -12,5 +12,3 @@
 * Design log
 
 ## Project
-
-* Nix configuration

@@ -34,8 +34,6 @@ let
     ghc8104 = "c92ca95afb5043bc6faa0d526460584eccff2277";
     ghc884  = "c92ca95afb5043bc6faa0d526460584eccff2277";
     ghc865  = "2d9888f61c80f28b09d64f5e39d0ba02e3923057";
-    ghc844  = "6a80140fdf2157d1a5500a04c87033c0dcd6bf9b";
-    ghc822  = "6a80140fdf2157d1a5500a04c87033c0dcd6bf9b";
   };
 
   # This function fetches the specified nixpkgs revision.
