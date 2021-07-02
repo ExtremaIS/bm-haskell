@@ -8,6 +8,4 @@
 
 ## Documentation
 
-* README
-
 ## Project

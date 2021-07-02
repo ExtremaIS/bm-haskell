@@ -3,6 +3,7 @@
 args:
 
   - keyword: "/"
+    url: https://duckduckgo.com
     query:
       action: https://duckduckgo.com/
       hidden:
