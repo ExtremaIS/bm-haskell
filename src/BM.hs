@@ -39,8 +39,8 @@ import Data.Aeson (FromJSON, (.:), (.:?), (.!=))
 import qualified Data.Aeson.Types as AT
 
 -- https://hackage.haskell.org/package/base
-import Data.List (find, intercalate, isPrefixOf)
-import Data.Maybe (fromMaybe, listToMaybe)
+import Data.List (intercalate, isPrefixOf)
+import Data.Maybe (fromMaybe)
 import Data.Version (showVersion)
 import qualified System.Info
 
@@ -59,6 +59,10 @@ import qualified Data.Text as T
 
 -- https://hackage.haskell.org/package/transformers
 import Control.Monad.Trans.Writer (Writer, runWriter, tell)
+
+-- https://hackage.haskell.org/package/vector
+import qualified Data.Vector as V
+import Data.Vector (Vector)
 
 -- (bm:cabal)
 import qualified Paths_bm as Project
@@ -138,7 +142,7 @@ type Url = String
 data Config
   = Config
     { configCommand :: !Command
-    , configArgs    :: ![Bookmark]
+    , configArgs    :: !(Vector Bookmark)
     }
   deriving Show
 
@@ -170,7 +174,7 @@ data Bookmark
     { keyword     :: !Keyword
     , mCommand    :: !(Maybe Command)
     , mUrl        :: !(Maybe Url)
-    , queryOrArgs :: !(Either Query [Bookmark])
+    , queryOrArgs :: !(Either Query (Vector Bookmark))
     }
   deriving Show
 
@@ -184,7 +188,7 @@ instance FromJSON Bookmark where
     queryOrArgs <- case (mQuery, mArgs) of
       (Nothing,    Just args) -> pure $ Right args
       (Just query, Nothing)   -> pure $ Left query
-      (Nothing,    Nothing)   -> pure $ Right []
+      (Nothing,    Nothing)   -> pure $ Right V.empty
       (Just{},     Just{})    -> fail $
         "bookmark has both query and args: " ++ keyword
     pure Bookmark{..}
@@ -204,7 +208,7 @@ data Query
   = Query
     { action           :: !Url
     , parameter        :: !ParameterName
-    , hiddenParameters :: ![Parameter]
+    , hiddenParameters :: !(Vector Parameter)
     }
   deriving Show
 
@@ -213,7 +217,7 @@ instance FromJSON Query where
     Query
       <$> o .:  "action"
       <*> o .:? "parameter" .!= defaultParameter
-      <*> o .:? "hidden"    .!= []
+      <*> o .:? "hidden"    .!= V.empty
 
 ------------------------------------------------------------------------------
 
@@ -278,10 +282,10 @@ run Config{..} cliArgs = fmap DList.toList . runWriter $ do
   where
     loop
       :: Command
-      -> [Bookmark]
+      -> Vector Bookmark
       -> [Argument]
       -> Writer (DList Trace) (Either Error Proc)
-    loop cmd bms (arg:args) = case find (isPrefixOf arg . keyword) bms of
+    loop cmd bms (arg:args) = case V.find (isPrefixOf arg . keyword) bms of
       Just bm -> do
         trace $ formatBookmark bm
         case queryOrArgs bm of
@@ -293,7 +297,7 @@ run Config{..} cliArgs = fmap DList.toList . runWriter $ do
           Right bms'
             | null args -> case mUrl bm of
                 Just url -> openUrl (fromMaybe cmd $ mCommand bm) url
-                Nothing  -> case listToMaybe bms' of
+                Nothing  -> case bms' V.!? 0 of
                   Just bm' ->
                     loop (fromMaybe cmd $ mCommand bm) bms' [keyword bm']
                   Nothing -> returnError $ "no URL for " ++ keyword bm
@@ -320,7 +324,7 @@ run Config{..} cliArgs = fmap DList.toList . runWriter $ do
       . ('?' :)
       . intercalate "&"
       . map encodeParameter
-      $ Parameter parameter (unwords args) : hiddenParameters
+      $ Parameter parameter (unwords args) : V.toList hiddenParameters
 
     trace :: Trace -> Writer (DList Trace) ()
     trace = tell . DList.singleton
@@ -347,9 +351,9 @@ getCompletion
   -> [Argument]  -- ^ completion options
 getCompletion Config{..} = loop configArgs
   where
-    loop :: [Bookmark] -> [Argument] -> [Argument]
-    loop bms [arg] = filter (isPrefixOf arg) $ map keyword bms
-    loop bms (arg:args) = case find (isPrefixOf arg . keyword) bms of
+    loop :: Vector Bookmark -> [Argument] -> [Argument]
+    loop bms [arg] = filter (isPrefixOf arg) . map keyword $ V.toList bms
+    loop bms (arg:args) = case V.find (isPrefixOf arg . keyword) bms of
       Just bm -> case queryOrArgs bm of
         Left{} -> []
         Right bms' -> loop bms' args

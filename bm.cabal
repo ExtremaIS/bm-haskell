@@ -49,6 +49,7 @@ library
     , scientific
     , text
     , transformers
+    , vector
   default-language: Haskell2010
   default-extensions:
       OverloadedStrings
@@ -85,5 +86,6 @@ test-suite bm-test
     , bm
     , tasty
     , tasty-hunit
+    , vector
   default-language: Haskell2010
   ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N

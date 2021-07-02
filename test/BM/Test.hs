@@ -6,6 +6,9 @@ import Test.Tasty (TestTree, testGroup)
 -- https://hackage.haskell.org/package/tasty-hunit
 import Test.Tasty.HUnit ((@=?), testCase)
 
+-- https://hackage.haskell.org/package/vector
+import qualified Data.Vector as V
+
 -- (bm)
 import qualified BM
 
@@ -14,7 +17,7 @@ import qualified BM
 config :: BM.Config
 config = BM.Config
     { BM.configCommand = "xdg-open"
-    , BM.configArgs = [ddg, google, nix, postgres, python, tst]
+    , BM.configArgs = V.fromList [ddg, google, nix, postgres, python, tst]
     }
   where
     ddg = BM.Bookmark
@@ -24,7 +27,7 @@ config = BM.Config
       , BM.queryOrArgs = Left $ BM.Query
           { BM.action           = "https://duckduckgo.com/"
           , BM.parameter        = "q"
-          , BM.hiddenParameters =
+          , BM.hiddenParameters = V.fromList
               [ BM.Parameter
                   { BM.name  = "ia"
                   , BM.value = "web"
@@ -40,7 +43,7 @@ config = BM.Config
       , BM.queryOrArgs = Left $ BM.Query
           { BM.action           = "https://www.google.com/search"
           , BM.parameter        = "q"
-          , BM.hiddenParameters = []
+          , BM.hiddenParameters = V.empty
           }
       }
 
@@ -48,76 +51,76 @@ config = BM.Config
       { BM.keyword     = "nix"
       , BM.mCommand    = Nothing
       , BM.mUrl        = Just "https://nixos.org/"
-      , BM.queryOrArgs = Right [nixManual, nixOS, nixPkgs]
+      , BM.queryOrArgs = Right $ V.fromList [nixManual, nixOS, nixPkgs]
       }
     nixManual = BM.Bookmark
       { BM.keyword     = "manual"
       , BM.mCommand    = Nothing
       , BM.mUrl        = Just "https://nixos.org/manual/nix/stable"
-      , BM.queryOrArgs = Right []
+      , BM.queryOrArgs = Right V.empty
       }
     nixOS = BM.Bookmark
       { BM.keyword     = "OS"
       , BM.mCommand    = Nothing
       , BM.mUrl        = Just "https://nixos.org/manual/nixos/stable"
-      , BM.queryOrArgs = Right []
+      , BM.queryOrArgs = Right V.empty
       }
     nixPkgs = BM.Bookmark
       { BM.keyword     = "pkgs"
       , BM.mCommand    = Nothing
       , BM.mUrl        = Just "https://github.com/NixOS/nixpkgs"
-      , BM.queryOrArgs = Right [nixPkgsManual]
+      , BM.queryOrArgs = Right $ V.fromList [nixPkgsManual]
       }
     nixPkgsManual = BM.Bookmark
       { BM.keyword     = "manual"
       , BM.mCommand    = Nothing
       , BM.mUrl        = Just "https://nixos.org/manual/nixpkgs/stable"
-      , BM.queryOrArgs = Right []
+      , BM.queryOrArgs = Right V.empty
       }
 
     postgres = BM.Bookmark
       { BM.keyword     = "postgres"
       , BM.mCommand    = Nothing
       , BM.mUrl = Just "https://www.postgresql.org/docs/current/index.html"
-      , BM.queryOrArgs = Right []
+      , BM.queryOrArgs = Right V.empty
       }
 
     python = BM.Bookmark
       { BM.keyword     = "python"
       , BM.mCommand    = Nothing
       , BM.mUrl        = Just "https://docs.python.org/3/"
-      , BM.queryOrArgs = Right []
+      , BM.queryOrArgs = Right V.empty
       }
 
     tst = BM.Bookmark
       { BM.keyword     = "tst"
       , BM.mCommand    = Nothing
       , BM.mUrl        = Nothing
-      , BM.queryOrArgs = Right [tstAUrl, tstCommand, tstNoUrl]
+      , BM.queryOrArgs = Right $ V.fromList [tstAUrl, tstCommand, tstNoUrl]
       }
     tstAUrl = BM.Bookmark
       { BM.keyword     = "aurl"
       , BM.mCommand    = Nothing
       , BM.mUrl        = Just "http://localhost:8001"
-      , BM.queryOrArgs = Right []
+      , BM.queryOrArgs = Right V.empty
       }
     tstCommand = BM.Bookmark
       { BM.keyword     = "cmd"
       , BM.mCommand    = Just "firefox"
       , BM.mUrl        = Just "http://localhost:8002"
-      , BM.queryOrArgs = Right [tstCommandChild]
+      , BM.queryOrArgs = Right $ V.fromList [tstCommandChild]
       }
     tstCommandChild = BM.Bookmark
       { BM.keyword     = "child"
       , BM.mCommand    = Nothing
       , BM.mUrl        = Just "http://localhost:8003"
-      , BM.queryOrArgs = Right []
+      , BM.queryOrArgs = Right V.empty
       }
     tstNoUrl = BM.Bookmark
       { BM.keyword     = "nourl"
       , BM.mCommand    = Nothing
       , BM.mUrl        = Nothing
-      , BM.queryOrArgs = Right []
+      , BM.queryOrArgs = Right V.empty
       }
 
 ------------------------------------------------------------------------------
