@@ -1,0 +1,62 @@
+---
+
+args:
+
+  - keyword: "/"
+    url: https://duckduckgo.com
+    query:
+      action: https://duckduckgo.com/
+      hidden:
+        - name: ia
+          value: web
+
+  - keyword: arch
+    url: https://archlinux.org/
+    args:
+      - keyword: packages
+        url: https://archlinux.org/packages/
+      - keyword: wiki
+        url: https://wiki.archlinux.org/
+
+  - keyword: hackage
+    url: https://hackage.haskell.org/
+    query:
+      action: https://hackage.haskell.org/packages/search
+      parameter: terms
+
+  - keyword: haddock
+    url: https://www.haskell.org/haddock/doc/html/markup.html
+
+  - keyword: haskell
+    url: https://www.haskell.org/
+    args:
+      - keyword: libraries
+        url: https://downloads.haskell.org/~ghc/latest/docs/html/libraries/
+
+  - keyword: hoogle
+    url: https://hoogle.haskell.org/
+    query:
+      action: https://hoogle.haskell.org/
+      parameter: hoogle
+
+  - keyword: hn
+    url: https://news.ycombinator.com/
+
+  - keyword: nix
+    url: https://nixos.org/
+    args:
+      - keyword: manual
+        url: https://nixos.org/manual/nix/stable
+      - keyword: os
+        url: https://nixos.org/manual/nixos/stable
+      - keyword: pkgs
+        url: https://github.com/NixOS/nixpkgs
+        args:
+          - keyword: manual
+            url: https://nixos.org/manual/nixpkgs/stable
+
+  - keyword: wikipedia
+    url: https://en.wikipedia.org/wiki/Special:Search
+    query:
+      action: https://en.wikipedia.org/w/index.php
+      parameter: search

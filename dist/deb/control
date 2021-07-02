@@ -1,0 +1,14 @@
+Source: bm-haskell
+Section: utils
+Priority: optional
+Maintainer: Travis Cardwell <travis.cardwell@extrema.is>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.8
+Vcs-Git: git://github.com/ExtremaIS/bm-haskell.git
+Vcs-browser: https://github.com/ExtremaIS/bm-haskell
+Homepage: https://github.com/ExtremaIS/bm-haskell#bm
+
+Package: bm-haskell
+Architecture: {{ARCH}}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Open bookmarks and queries from the command line
