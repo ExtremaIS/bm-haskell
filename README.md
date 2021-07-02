@@ -61,7 +61,8 @@ Check the [Releases][] page for `.rpm` packages.
 
 Bookmarks and search queries are configured using a hierarchy of keywords in a
 YAML configuration file.  They are selected using keyword prefixes as
-command-line arguments.  See the [`bm` man page](doc/bm.1.md) for details.
+command-line arguments.  Command-line completion is available for Bash.  See
+the [`bm` man page](doc/bm.1.md) for details.
 
 Note that the command used to open bookmarks and queries can be customized in
 the configuration file.  Specifying the command for your specific browser can
