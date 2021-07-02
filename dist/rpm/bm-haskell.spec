@@ -11,7 +11,9 @@ Requires:      glibc,gmp
 #ExcludeArch:
 
 %description
-bm is a utility for opening bookmarks and queries from the command line.
+bm is a utility for opening bookmarks and queries from the command line.  It
+allows you to quickly open bookmarks and perform search queries in your
+browser using only your keyboard.
 
 %global debug_package %{nil}
 
