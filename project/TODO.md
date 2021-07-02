@@ -9,6 +9,5 @@
 ## Documentation
 
 * README
-* Design log
 
 ## Project
