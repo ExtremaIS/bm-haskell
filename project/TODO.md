@@ -13,6 +13,4 @@
 
 ## Project
 
-* Deb package
-* RPM package
 * Nix configuration
