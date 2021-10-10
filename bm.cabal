@@ -1,5 +1,5 @@
 name:           bm
-version:        0.1.0.0
+version:        0.1.0.1
 category:       Utils
 synopsis:       open bookmarks and queries from the command line
 description:
@@ -20,7 +20,7 @@ build-type:     Simple
 tested-with:
   GHC ==8.6.5
    || ==8.8.4
-   || ==8.10.4
+   || ==8.10.7
    || ==9.0.1
 
 extra-source-files:
@@ -42,14 +42,14 @@ library
   other-modules:
       Paths_bm
   build-depends:
-      aeson
-    , base
-    , dlist
-    , network-uri
-    , scientific
-    , text
-    , transformers
-    , vector
+      aeson >=1.4 && < 1.6
+    , base >=4.7 && <5
+    , dlist >=0.8 && <1.1
+    , network-uri >=2.6 && <2.7
+    , scientific >=0.3 && <0.4
+    , text >=1.2.3 && <1.3
+    , transformers >=0.5.6 && <0.6
+    , vector >=0.12 && <0.13
   default-language: Haskell2010
   default-extensions:
       OverloadedStrings
@@ -64,14 +64,14 @@ executable bm
   other-modules:
       LibOA
   build-depends:
-      ansi-wl-pprint
+      ansi-wl-pprint >=0.6 && <0.7
     , base
     , bm
-    , directory
-    , filepath
-    , optparse-applicative
-    , typed-process
-    , yaml
+    , directory >=1.3 && <1.4
+    , filepath >=1.4 && <1.5
+    , optparse-applicative >=0.14 && <0.17
+    , typed-process >=0.2.6 && <0.3
+    , yaml >=0.11 && <0.12
   default-language: Haskell2010
   ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
 
@@ -84,8 +84,8 @@ test-suite bm-test
   build-depends:
       base
     , bm
-    , tasty
-    , tasty-hunit
+    , tasty >=1.0 && <1.5
+    , tasty-hunit >=0.10 && <0.11
     , vector
   default-language: Haskell2010
   ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
