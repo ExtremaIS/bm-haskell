@@ -42,7 +42,7 @@ library
   other-modules:
       Paths_bm
   build-depends:
-      aeson
+      aeson >=1.4.6 && < 1.6
     , base
     , dlist
     , network-uri
