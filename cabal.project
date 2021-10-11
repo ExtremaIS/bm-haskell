@@ -1,0 +1,5 @@
+packages:
+    ./
+
+constraints:
+    aeson -ordered-keymap
