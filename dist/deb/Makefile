@@ -1,9 +1,10 @@
-DESTDIR     ?=
-prefix      ?= /usr
-bindir      ?= $(DESTDIR)/$(prefix)/bin
-datarootdir ?= $(DESTDIR)/$(prefix)/share
-docdir      ?= $(datarootdir)/doc/bm-haskell
-man1dir     ?= $(datarootdir)/man/man1
+DESTDIR ?=
+prefix  ?= /usr
+
+bindir      := $(DESTDIR)$(prefix)/bin
+datarootdir := $(DESTDIR)$(prefix)/share
+docdir      := $(datarootdir)/doc/bm-haskell
+man1dir     := $(datarootdir)/man/man1
 
 SHELL := bash
 
@@ -16,11 +17,15 @@ install:
 	@mkdir -p "$(bindir)"
 	@install -m 0755 "$(LIROOT)/bin/bm" "$(bindir)/bm"
 	@mkdir -p "$(man1dir)"
-	@install -m 0644 -T <(gzip -c doc/bm.1) "$(man1dir)/bm.1.gz"
+	@install -m 0644 doc/bm.1 "$(man1dir)"
+	@gzip "$(man1dir)/bm.1"
 	@mkdir -p "$(docdir)"
-	@install -m 0644 -T <(gzip -c README.md) "$(docdir)/README.md.gz"
-	@install -m 0644 -T <(gzip -c CHANGELOG.md) "$(docdir)/changelog.gz"
-	@install -m 0644 -T <(gzip -c LICENSE) "$(docdir)/LICENSE.gz"
+	@install -m 0644 README.md "$(docdir)"
+	@gzip "$(docdir)/README.md"
+	@install -m 0644 -T CHANGELOG.md "$(docdir)/changelog"
+	@gzip "$(docdir)/changelog"
+	@install -m 0644 LICENSE "$(docdir)"
+	@gzip "$(docdir)/LICENSE"
 .PHONY: install
 
 test:
