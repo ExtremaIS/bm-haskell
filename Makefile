@@ -275,7 +275,7 @@ endif
 rpm: # build .rpm package for VERSION in a Fedora container
 > $(eval VERSION := $(shell \
     grep '^version:' $(CABAL_FILE) | sed 's/^version: *//'))
-> $(eval SRC := "$(PROJECT)-$(VERSION).tar.xz")
+> $(eval SRC := $(PROJECT)-$(VERSION).tar.xz)
 > @test -f build/$(SRC) || $(call die,"build/$(SRC) not found")
 > @docker run --rm -it \
 >   -e RPMFULLNAME="$(MAINTAINER_NAME)" \
