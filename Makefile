@@ -90,6 +90,10 @@ define die
   (echo "error: $(1)" ; false)
 endef
 
+define get_version
+$(shell grep '^version:' $(CABAL_FILE) | sed 's/^version: *//')
+endef
+
 define hs_files
   find . -not -path '*/\.*' -type f -name '*.hs'
 endef
@@ -149,8 +153,7 @@ endif
 .PHONY: coverage
 
 deb: # build .deb package for VERSION in a Debian container
-> $(eval VERSION := $(shell \
-    grep '^version:' $(CABAL_FILE) | sed 's/^version: *//'))
+> $(eval VERSION := $(call get_version))
 > $(eval SRC := $(PROJECT)-$(VERSION).tar.xz)
 > @test -f build/$(SRC) || $(call die,"build/$(SRC) not found")
 > @docker run --rm -it \
@@ -262,8 +265,7 @@ install-man: # install man page(s)
 .PHONY: install-man
 
 man: # build man page
-> $(eval VERSION := $(shell \
-    grep '^version:' $(CABAL_FILE) | sed 's/^version: *//'))
+> $(eval VERSION := $(call get_version))
 > $(eval DATE := $(shell date --rfc-3339=date))
 > $(foreach EXE,$(EXECUTABLES), \
     @pandoc -s -t man -o doc/$(EXE).1 \
@@ -289,8 +291,7 @@ endif
 .PHONY: repl
 
 rpm: # build .rpm package for VERSION in a Fedora container
-> $(eval VERSION := $(shell \
-    grep '^version:' $(CABAL_FILE) | sed 's/^version: *//'))
+> $(eval VERSION := $(call get_version))
 > $(eval SRC := $(PROJECT)-$(VERSION).tar.xz)
 > @test -f build/$(SRC) || $(call die,"build/$(SRC) not found")
 > @docker run --rm -it \
@@ -323,8 +324,7 @@ source-git: # create source tarball of git TREE
     | wc -l))
 > @test "$(UNTRACKED)" = "0" \
 >   || echo "WARNING: Not including untracked files!" >&2
-> $(eval VERSION := $(shell \
-    grep '^version:' $(CABAL_FILE) | sed 's/^version: *//'))
+> $(eval VERSION := $(call get_version))
 > @mkdir -p build
 > @git archive --format=tar --prefix=$(PROJECT)-$(VERSION)/ $(TREE) \
 >   | xz \
@@ -340,8 +340,7 @@ source-tar: # create source tarball using tar
     | wc -l))
 > @test "$(UNTRACKED)" = "0" \
 >   || echo "WARNING: Including untracked files!" >&2
-> $(eval VERSION := $(shell \
-    grep '^version:' $(CABAL_FILE) | sed 's/^version: *//'))
+> $(eval VERSION := $(call get_version))
 > @mkdir -p build
 > @sed -e 's,^/,./,' -e 's,/$$,,' .gitignore > build/.gitignore
 > @tar \
@@ -422,5 +421,5 @@ todo: # search for TODO items
 .PHONY: todo
 
 version: # show current version
-> @grep '^version:' $(CABAL_FILE) | sed 's/^version: */$(PROJECT) /'
+> @echo "$(PROJECT) $(call get_version)"
 .PHONY: version
