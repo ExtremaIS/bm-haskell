@@ -97,7 +97,8 @@ define die
 endef
 
 define get_version
-$(shell grep '^version:' $(CABAL_FILE) | sed 's/^version: *//')
+$(shell grep '^version:' $(if $(origin 1) == undefined,$(CABAL_FILE),$(1)) \
+        | sed 's/^version: *//')
 endef
 
 define hs_files
