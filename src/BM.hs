@@ -71,6 +71,8 @@ import qualified Paths_bm as Project
 -- $Constants
 
 -- | bm version string (\"@bm-haskell X.X.X.X@\")
+--
+-- @since 0.1.0.0
 version :: String
 version = "bm-haskell " ++ showVersion Project.version
 
@@ -94,33 +96,49 @@ defaultParameter = "q"
 -- provided to make the API easier to read.
 
 -- | CLI argument or process argument
+--
+-- @since 0.1.0.0
 type Argument = String
 
 -- | Process command
 --
 -- This command is executed with a single URL argument to open a
 -- bookmark/query.
+--
+-- @since 0.1.0.0
 type Command = FilePath
 
 -- | Error message
+--
+-- @since 0.1.0.0
 type Error = String
 
 -- | Bookmark keyword
 --
 -- The configuration file defines a hierarchy of keywords that are matched
 -- against CLI arguments to determine which bookmark/query to open.
+--
+-- @since 0.1.0.0
 type Keyword = String
 
 -- | Query parameter name
+--
+-- @since 0.1.0.0
 type ParameterName = String
 
 -- | Query parameter value
+--
+-- @since 0.1.0.0
 type ParameterValue = String
 
 -- | Trace line for debugging
+--
+-- @since 0.1.0.0
 type Trace = String
 
 -- | Bookmark or query action URL
+--
+-- @since 0.1.0.0
 type Url = String
 
 ------------------------------------------------------------------------------
