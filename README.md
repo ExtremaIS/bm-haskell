@@ -50,7 +50,7 @@ Check the [Releases][] page for `.rpm` packages.
 
 #### Installation From Hackage
 
-Install `hr` from [Hackage][] using [Cabal][] as follows:
+Install `bm` from [Hackage][] using [Cabal][] as follows:
 
 ```
 $ cabal v2-install bm
@@ -61,7 +61,7 @@ $ cabal v2-install bm
 
 #### Installation From Stackage
 
-Install `hr` from [Stackage][] using [Stack][] as follows:
+Install `bm` from [Stackage][] using [Stack][] as follows:
 
 ```
 $ stack install bm
