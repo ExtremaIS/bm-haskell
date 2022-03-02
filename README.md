@@ -2,28 +2,32 @@
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![GitHub CI](https://github.com/ExtremaIS/bm-haskell/workflows/CI/badge.svg?branch=main)](https://github.com/ExtremaIS/bm-haskell/actions)
+[![Hackage](https://img.shields.io/hackage/v/bm.svg)](https://hackage.haskell.org/package/bm)
+[![Stackage LTS](https://stackage.org/package/bm/badge/lts)](https://stackage.org/package/bm)
+[![Stackage Nightly](https://stackage.org/package/bm/badge/nightly)](https://stackage.org/nightly/package/bm)
 
 * [Overview](#overview)
 * [CLI](#cli)
     * [Requirements](#requirements)
     * [Installation](#installation)
-        * [Installation From Source](#installation-from-source)
         * [`.deb` Package Installation](#deb-package-installation)
         * [`.rpm` Package Installation](#rpm-package-installation)
+        * [Installation From Hackage](#installation-from-hackage)
+        * [Installation From Stackage](#installation-from-stackage)
     * [Usage](#usage)
         * [Examples](#examples)
 * [Project](#project)
     * [Links](#links)
-    * [Releases](#releases)
+    * [Tags](#tags)
     * [Contribution](#contribution)
     * [License](#license)
 
 ## Overview
 
 `bm` is a utility for opening bookmarks and queries from the command line.
-
-It allows you to quickly open bookmarks and perform search queries in your
-browser using only your keyboard.
+The bookmarks and queries are configured hierarchically in YAML, and they are
+referenced using keyword prefixes.  It allows you to quickly open bookmarks
+and perform search queries in your browser using only your keyboard.
 
 ## CLI
 
@@ -34,28 +38,37 @@ on Linux.
 
 ### Installation
 
-#### Installation From Source
-
-`bm` can be built from source using [Stack](https://www.haskellstack.org).
-For example, you can install the latest release (to `/usr/local` on Linux) as
-follows:
-
-```
-$ git clone https://github.com/ExtremaIS/bm-haskell.git
-$ cd bm-haskell
-$ make
-$ sudo make install
-```
-
-##### `.deb` Package Installation
+#### `.deb` Package Installation
 
 Check the [Releases][] page for `.deb` packages.
 
-##### `.rpm` Package Installation
+[Releases]: <https://github.com/ExtremaIS/bm-haskell/releases>
+
+#### `.rpm` Package Installation
 
 Check the [Releases][] page for `.rpm` packages.
 
-[Releases]: <https://github.com/ExtremaIS/bm-haskell/releases>
+#### Installation From Hackage
+
+Install `bm` from [Hackage][] using [Cabal][] as follows:
+
+```
+$ cabal v2-install bm
+```
+
+[Hackage]: <https://hackage.haskell.org/package/bm>
+[Cabal]: <https://www.haskell.org/cabal/>
+
+#### Installation From Stackage
+
+Install `bm` from [Stackage][] using [Stack][] as follows:
+
+```
+$ stack install bm
+```
+
+[Stackage]: <https://www.stackage.org/package/bm>
+[Stack]: <https://haskellstack.org/>
 
 ### Usage
 
@@ -114,9 +127,12 @@ When multiple query arguments are provided, they are joined with a space.
 
 ### Links
 
+* Hackage: <https://hackage.haskell.org/package/bm>
+* Stackage: <https://www.stackage.org/package/bm>
 * GitHub: <https://github.com/ExtremaIS/bm-haskell>
+* GitHub Actions CI: <https://github.com/ExtremaIS/bm-haskell/actions>
 
-### Releases
+### Tags
 
 All releases are tagged in the `main` branch.  Release tags are signed using
 the

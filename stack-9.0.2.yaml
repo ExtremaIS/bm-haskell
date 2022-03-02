@@ -1,0 +1,4 @@
+resolver: nightly-2022-02-27
+
+packages:
+  - .

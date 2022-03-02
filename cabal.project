@@ -1,0 +1,5 @@
+packages:
+    ./bm.cabal
+
+constraints:
+    aeson -ordered-keymap
