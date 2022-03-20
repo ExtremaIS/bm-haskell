@@ -2,3 +2,7 @@ resolver: lts-19.0
 
 packages:
   - .
+
+flags:
+  aeson:
+    ordered-keymap: false
