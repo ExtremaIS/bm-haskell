@@ -4,10 +4,14 @@ packages:
   - .
 
 extra-deps:
-  - parsec-3.1.15.0
+  - exceptions-0.10.5
+  - mtl-2.3
+  - parsec-3.1.15.1
+  - random-1.2.1.1
+  - resourcet-1.2.5
+  - tasty-1.4.2.3
   - text-2.0
-
-allow-newer: true
+  - transformers-0.6.0.4
 
 flags:
   aeson:
