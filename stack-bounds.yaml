@@ -1,4 +1,4 @@
-resolver: nightly-2022-05-05
+resolver: nightly-2022-05-12
 
 packages:
   - .
@@ -7,9 +7,6 @@ extra-deps:
   - exceptions-0.10.5
   - mtl-2.3
   - parsec-3.1.15.1
-  - random-1.2.1.1
-  - resourcet-1.2.5
-  - tasty-1.4.2.3
   - text-2.0
   - transformers-0.6.0.4
 
