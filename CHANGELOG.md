@@ -28,6 +28,7 @@ following conventions:
 
 ### Non-Breaking
 
+* Bump `aeson` dependency version upper bound
 * Bump `transformers` dependency version upper bound
 
 ## 0.1.0.2 (2022-03-02)
