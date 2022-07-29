@@ -14,6 +14,11 @@ extra-deps:
   - process-1.6.14.0
   - text-2.0
   - transformers-0.6.0.4
+  - vector-0.13.0.0
+  - vector-algorithms-0.9.0.1
+  - vector-stream-0.1.0.0
+
+allow-newer: true
 
 flags:
   aeson:
