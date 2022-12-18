@@ -1,0 +1,8 @@
+resolver: nightly-2022-12-17
+
+packages:
+  - .
+
+flags:
+  aeson:
+    ordered-keymap: false
