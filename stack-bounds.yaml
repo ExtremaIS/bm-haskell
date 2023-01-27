@@ -1,1 +1,16 @@
-stack-9.4.4.yaml
+resolver: nightly-2023-01-25
+
+packages:
+  - .
+
+extra-deps:
+  - exceptions-0.10.7
+  # https://hackage.haskell.org/package/mtl
+  - mtl-2.3.1
+  - parsec-3.1.16.1
+  # https://hackage.haskell.org/package/transformers
+  - transformers-0.6.0.6
+
+flags:
+  aeson:
+    ordered-keymap: false
