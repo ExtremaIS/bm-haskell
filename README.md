@@ -131,6 +131,7 @@ When multiple query arguments are provided, they are joined with a space.
 
 * Hackage: <https://hackage.haskell.org/package/bm>
 * Stackage: <https://www.stackage.org/package/bm>
+* Flora: <https://flora.pm/packages/@hackage/bm>
 * GitHub: <https://github.com/ExtremaIS/bm-haskell>
 * GitHub Actions CI: <https://github.com/ExtremaIS/bm-haskell/actions>
 
