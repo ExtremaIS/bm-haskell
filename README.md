@@ -75,11 +75,13 @@ $ stack install bm
 Bookmarks and search queries are configured using a hierarchy of keywords in a
 YAML configuration file.  They are selected using keyword prefixes as
 command-line arguments.  Command-line completion is available for Bash.  See
-the [`bm` man page](doc/bm.1.md) for details.
+the [`bm` man page][] for details.
 
 Note that the command used to open bookmarks and queries can be customized in
 the configuration file.  Specifying the command for your specific browser can
 make links open considerably faster than with the default (generic) command.
+
+[`bm` man page]: <doc/bm.1.md>
 
 #### Examples
 
@@ -135,8 +137,9 @@ When multiple query arguments are provided, they are joined with a space.
 ### Tags
 
 All releases are tagged in the `main` branch.  Release tags are signed using
-the
-[`security@extrema.is` GPG key](http://keys.gnupg.net/pks/lookup?op=vindex&fingerprint=on&search=0x1D484E4B4705FADF).
+the [`security@extrema.is` GPG key][].
+
+[`security@extrema.is` GPG key]: <http://keys.gnupg.net/pks/lookup?op=vindex&fingerprint=on&search=0x1D484E4B4705FADF>
 
 ### Contribution
 
@@ -147,6 +150,8 @@ Issues may also be submitted via email to <bugs@extrema.is>.
 
 ### License
 
-This project is released under the
-[MIT License](https://opensource.org/licenses/MIT) as specified in the
-[`LICENSE`](LICENSE) file.
+This project is released under the [MIT License][] as specified in the
+[`LICENSE`][] file.
+
+[MIT License]: <https://opensource.org/licenses/MIT>
+[`LICENSE`]: <LICENSE>
