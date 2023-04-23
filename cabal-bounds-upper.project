@@ -1,0 +1,57 @@
+packages: ./bm.cabal
+
+with-compiler: ghc-9.6.1
+
+constraints:
+    -- https://hackage.haskell.org/package/aeson
+  , aeson == 2.1.2.1
+
+    -- https://hackage.haskell.org/package/ansi-wl-pprint
+  , ansi-wl-pprint == 0.6.9
+
+    -- https://hackage.haskell.org/package/base
+    -- GHC boot library
+  , base == 4.18.0.0
+
+    -- https://hackage.haskell.org/package/directory
+    -- GHC boot library
+  , directory == 1.3.8.1
+
+    -- https://hackage.haskell.org/package/dlist
+  , dlist == 1.0
+
+    -- https://hackage.haskell.org/package/filepath
+    -- GHC boot library
+  , filepath == 1.4.100.1
+
+    -- https://hackage.haskell.org/package/network-uri
+  , network-uri == 2.6.4.2
+
+    -- https://hackage.haskell.org/package/optparse-applicative
+  , optparse-applicative == 0.17.0.0
+
+    -- https://hackage.haskell.org/package/scientific
+  , scientific == 0.3.7.0
+
+    -- https://hackage.haskell.org/package/tasty
+  , tasty == 1.4.3
+
+    -- https://hackage.haskell.org/package/tasty-hunit
+  , tasty-hunit == 0.10.0.3
+
+    -- https://hackage.haskell.org/package/text
+    -- GHC boot library
+  , text == 2.0.2
+
+    -- https://hackage.haskell.org/package/transformers
+    -- GHC boot library
+  , transformers == 0.6.1.0
+
+    -- https://hackage.haskell.org/package/typed-process
+  , typed-process == 0.2.11.0
+
+    -- https://hackage.haskell.org/package/vector
+  , vector == 0.13.0.0
+
+    -- https://hackage.haskell.org/package/yaml
+  , yaml == 0.11.11.0
