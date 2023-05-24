@@ -7,7 +7,7 @@ constraints:
   , aeson == 2.1.2.1
 
     -- https://hackage.haskell.org/package/ansi-wl-pprint
-  , ansi-wl-pprint == 0.6.9
+  , ansi-wl-pprint == 1.0.2
 
     -- https://hackage.haskell.org/package/base
     -- GHC boot library
@@ -28,7 +28,7 @@ constraints:
   , network-uri == 2.6.4.2
 
     -- https://hackage.haskell.org/package/optparse-applicative
-  , optparse-applicative == 0.17.0.0
+  , optparse-applicative == 0.17.1.0
 
     -- https://hackage.haskell.org/package/scientific
   , scientific == 0.3.7.0
