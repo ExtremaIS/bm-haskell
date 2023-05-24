@@ -34,10 +34,6 @@ source-repository head
   type: git
   location: https://github.com/ExtremaIS/bm-haskell.git
 
-flag write-hie
-  description: write .hie files
-  default: False
-
 library
   hs-source-dirs: src
   exposed-modules:
@@ -56,10 +52,7 @@ library
   default-language: Haskell2010
   default-extensions:
       OverloadedStrings
-  if flag(write-hie)
-    ghc-options: -Wall -fwrite-ide-info -hiedir=.hie
-  else
-    ghc-options: -Wall
+  ghc-options: -Wall
 
 executable bm
   hs-source-dirs: app
