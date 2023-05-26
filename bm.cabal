@@ -34,6 +34,12 @@ source-repository head
   type: git
   location: https://github.com/ExtremaIS/bm-haskell.git
 
+-- This flag is referenced in the Stack build-constraints.yaml configuration.
+flag optparse-applicative_ge_0_18
+  description: Use optparse-applicative 0.18 or newer
+  default: False
+  manual: False
+
 library
   hs-source-dirs: src
   exposed-modules:
@@ -60,14 +66,20 @@ executable bm
   other-modules:
       LibOA
   build-depends:
-      ansi-wl-pprint >=0.6.8 && <1.1
-    , base
+      base
     , bm
     , directory >=1.3.3 && <1.4
     , filepath >=1.4.2.1 && <1.5
-    , optparse-applicative >=0.14 && <0.18
     , typed-process >=0.2.6 && <0.3
     , yaml >=0.11.2 && <0.12
+  if flag(optparse-applicative_ge_0_18)
+    build-depends:
+        optparse-applicative >=0.18 && <0.19
+      , prettyprinter >=1.7.1 && <1.8
+  else
+    build-depends:
+        ansi-wl-pprint >=0.6.8 && <1.1
+      , optparse-applicative >=0.13 && <0.18
   default-language: Haskell2010
   ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
 
