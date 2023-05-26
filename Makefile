@@ -384,7 +384,7 @@ else
 endif
 .PHONY: test
 
-test-all: # run all configured tests and build examples using MODE
+test-all: # run all configured tests using MODE
 > @./test-all.sh "$(MODE)"
 .PHONY: test-all
 
