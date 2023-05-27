@@ -1,13 +1,10 @@
 packages: ./bm.cabal
 
-with-compiler: ghc-9.6.1
+with-compiler: ghc-9.6.2
 
 constraints:
     -- https://hackage.haskell.org/package/aeson
   , aeson == 2.1.2.1
-
-    -- https://hackage.haskell.org/package/ansi-wl-pprint
-  , ansi-wl-pprint == 0.6.9
 
     -- https://hackage.haskell.org/package/base
     -- GHC boot library
@@ -28,7 +25,10 @@ constraints:
   , network-uri == 2.6.4.2
 
     -- https://hackage.haskell.org/package/optparse-applicative
-  , optparse-applicative == 0.17.0.0
+  , optparse-applicative == 0.18.0.0
+
+    -- https://hackage.haskell.org/package/prettyprinter
+  , prettyprinter == 1.7.1
 
     -- https://hackage.haskell.org/package/scientific
   , scientific == 0.3.7.0
