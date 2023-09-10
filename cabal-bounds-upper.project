@@ -34,10 +34,10 @@ constraints:
   , scientific == 0.3.7.0
 
     -- https://hackage.haskell.org/package/tasty
-  , tasty == 1.4.3
+  , tasty == 1.5
 
     -- https://hackage.haskell.org/package/tasty-hunit
-  , tasty-hunit == 0.10.0.3
+  , tasty-hunit == 0.10.1
 
     -- https://hackage.haskell.org/package/text
     -- GHC boot library

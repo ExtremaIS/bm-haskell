@@ -29,6 +29,7 @@ following conventions:
 ### Non-Breaking
 
 * Bump `aeson` dependency version upper bound
+* Bump `tasty` dependency version upper bound
 
 ## 0.2.0.0 (2023-05-28)
 
