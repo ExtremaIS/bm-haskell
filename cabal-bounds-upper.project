@@ -19,7 +19,7 @@ constraints:
 
     -- https://hackage.haskell.org/package/filepath
     -- GHC boot library
-  , filepath == 1.4.100.1
+  , filepath == 1.4.100.4
 
     -- https://hackage.haskell.org/package/network-uri
   , network-uri == 2.6.4.2
@@ -45,7 +45,7 @@ constraints:
 
     -- https://hackage.haskell.org/package/transformers
     -- GHC boot library
-  , transformers == 0.6.1.0
+  , transformers == 0.6.1.1
 
     -- https://hackage.haskell.org/package/typed-process
   , typed-process == 0.2.11.0
