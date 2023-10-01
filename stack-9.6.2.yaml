@@ -1,8 +1,0 @@
-resolver: nightly-2023-09-30
-
-packages:
-  - .
-
-flags:
-  bm:
-    optparse-applicative_ge_0_18: true
