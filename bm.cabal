@@ -25,6 +25,7 @@ tested-with:
    || ==9.2.8
    || ==9.4.8
    || ==9.6.3
+   || ==9.8.1
 
 extra-source-files:
   CHANGELOG.md
@@ -48,7 +49,7 @@ library
       Paths_bm
   build-depends:
       aeson >=1.4.6 && < 2.3
-    , base >=4.12 && <4.19
+    , base >=4.12 && <4.20
     , dlist >=0.8.0.4 && <1.1
     , network-uri >=2.6.2 && <2.7
     , scientific >=0.3.6.2 && <0.4
