@@ -4,7 +4,7 @@ with-compiler: ghc-9.6.3
 
 constraints:
     -- https://hackage.haskell.org/package/aeson
-  , aeson == 2.2.0.0
+  , aeson == 2.2.1.0
 
     -- https://hackage.haskell.org/package/base
     -- GHC boot library
@@ -41,7 +41,7 @@ constraints:
 
     -- https://hackage.haskell.org/package/text
     -- GHC boot library
-  , text == 2.0.2
+  , text == 2.1
 
     -- https://hackage.haskell.org/package/transformers
     -- GHC boot library
