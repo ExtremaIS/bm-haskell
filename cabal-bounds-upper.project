@@ -1,6 +1,6 @@
 packages: ./bm.cabal
 
-with-compiler: ghc-9.8.1
+with-compiler: ghc-9.8.2
 
 constraints:
     -- https://hackage.haskell.org/package/aeson
@@ -8,7 +8,7 @@ constraints:
 
     -- https://hackage.haskell.org/package/base
     -- GHC boot library
-  , base == 4.19.0.0
+  , base == 4.19.1.0
 
     -- https://hackage.haskell.org/package/directory
     -- GHC boot library
@@ -19,7 +19,7 @@ constraints:
 
     -- https://hackage.haskell.org/package/filepath
     -- GHC boot library
-  , filepath == 1.4.100.4
+  , filepath == 1.4.200.1
 
     -- https://hackage.haskell.org/package/network-uri
   , network-uri == 2.6.4.2
@@ -41,7 +41,7 @@ constraints:
 
     -- https://hackage.haskell.org/package/text
     -- GHC boot library
-  , text == 2.1
+  , text == 2.1.1
 
     -- https://hackage.haskell.org/package/transformers
     -- GHC boot library
