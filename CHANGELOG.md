@@ -30,6 +30,7 @@ following conventions:
 
 * Bump `aeson` dependency version upper bound
 * Bump `base` dependency version upper bound
+* Bump `filepath` dependency version upper bound
 * Bump `tasty` dependency version upper bound
 * Bump `text` dependency version upper bound
 
