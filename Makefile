@@ -198,7 +198,6 @@ help: # show this help
 > @echo "Stack mode (MODE=stack)"
 > @echo "  * Set CONFIG to specify a stack.yaml file."
 > @echo "  * Set RESOLVER to specify a Stack resolver."
-> @echo "  * Set STACK_NIX_PATH to specify a Stack Nix path."
 .PHONY: help
 
 hlint: # run hlint on all Haskell source
