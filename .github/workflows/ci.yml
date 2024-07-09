@@ -61,7 +61,7 @@ jobs:
           cabal v2-configure $CABAL_OPTS --disable-documentation
           cabal v2-build --dry-run $CABAL_OPTS
       - name: Restore Cached Dependencies
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         id: cache
         with:
           path: ${{ steps.setup.outputs.cabal-store }}
@@ -70,7 +70,7 @@ jobs:
       - name: Install Dependencies
         run: cabal v2-build all $CABAL_OPTS --only-dependencies
       - name: Save Cached Dependencies
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         if: ${{ !steps.cache.outputs.cache-hit
           || steps.cache.outputs.cache-primary-key != steps.cache.outputs.cache-matched-key }}
         with:
@@ -114,7 +114,7 @@ jobs:
           CACHE_RESTORE_KEY="${RUNNER_OS}-$(date +%Y%m)-ghc-${GHC_VERSION}-stack-"
           echo "CACHE_RESTORE_KEY=${CACHE_RESTORE_KEY}" | tee -a "${GITHUB_ENV}"
       - name: Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.stack
@@ -161,7 +161,7 @@ jobs:
           cabal v2-configure $CABAL_OPTS --disable-documentation
           cabal v2-build --dry-run $CABAL_OPTS
       - name: Restore Cached Dependencies
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         id: cache
         with:
           path: ${{ steps.setup.outputs.cabal-store }}
@@ -170,7 +170,7 @@ jobs:
       - name: Install Dependencies
         run: cabal v2-build all $CABAL_OPTS --only-dependencies
       - name: Save Cached Dependencies
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         if: ${{ !steps.cache.outputs.cache-hit
           || steps.cache.outputs.cache-primary-key != steps.cache.outputs.cache-matched-key }}
         with:
@@ -216,7 +216,7 @@ jobs:
           cabal v2-configure $CABAL_OPTS --disable-documentation
           cabal v2-build --dry-run $CABAL_OPTS
       - name: Restore Cached Dependencies
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         id: cache
         with:
           path: ${{ steps.setup.outputs.cabal-store }}
@@ -225,7 +225,7 @@ jobs:
       - name: Install Dependencies
         run: cabal v2-build all $CABAL_OPTS --only-dependencies
       - name: Save Cached Dependencies
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         if: ${{ !steps.cache.outputs.cache-hit
           || steps.cache.outputs.cache-primary-key != steps.cache.outputs.cache-matched-key }}
         with:
@@ -274,7 +274,7 @@ jobs:
           cabal v2-configure $CABAL_OPTS --disable-documentation
           cabal v2-build --dry-run $CABAL_OPTS
       - name: Restore Cached Dependencies
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         id: cache
         with:
           path: ${{ steps.setup.outputs.cabal-store }}
@@ -283,7 +283,7 @@ jobs:
       - name: Install Dependencies
         run: cabal v2-build all $CABAL_OPTS --only-dependencies
       - name: Save Cached Dependencies
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         if: ${{ !steps.cache.outputs.cache-hit
           || steps.cache.outputs.cache-primary-key != steps.cache.outputs.cache-matched-key }}
         with:
