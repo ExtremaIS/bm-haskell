@@ -20,7 +20,7 @@ jobs:
       ghcvers_upper: ${{ steps.set-ghcvers.outputs.ghcvers_upper }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set ghcvers
         id: set-ghcvers
         run: ./test-all.sh github >> $GITHUB_OUTPUT
@@ -35,7 +35,7 @@ jobs:
         ghc: ${{fromJSON(needs.config.outputs.ghcvers)}}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Haskell
         uses: haskell-actions/setup@v2
         id: setup
@@ -93,7 +93,7 @@ jobs:
         ghc: ${{fromJSON(needs.config.outputs.ghcvers)}}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Haskell
         uses: haskell-actions/setup@v2
         id: setup
@@ -138,7 +138,7 @@ jobs:
         ghc: ${{fromJSON(needs.config.outputs.ghcvers_lower)}}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Haskell
         uses: haskell-actions/setup@v2
         id: setup
@@ -193,7 +193,7 @@ jobs:
         ghc: ${{fromJSON(needs.config.outputs.ghcvers_upper)}}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Haskell
         uses: haskell-actions/setup@v2
         id: setup
@@ -248,7 +248,7 @@ jobs:
         ghc: ['8.6.5']
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Haskell
         uses: haskell-actions/setup@v2
         id: setup
