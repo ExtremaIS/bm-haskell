@@ -26,6 +26,11 @@ following conventions:
 
 ## Unreleased
 
+### Breaking
+
+* Remove support for GHC 8.6, constraining lower bounds
+* Change minimal Cabal from 1.24 to 3.0
+
 ### Non-Breaking
 
 * Bump `aeson` dependency version upper bound
