@@ -34,7 +34,7 @@ constraints:
   , scientific == 0.3.8.0
 
     -- https://hackage.haskell.org/package/tasty
-  , tasty == 1.5
+  , tasty == 1.5.2
 
     -- https://hackage.haskell.org/package/tasty-hunit
   , tasty-hunit == 0.10.2
@@ -48,10 +48,10 @@ constraints:
   , transformers == 0.6.1.2
 
     -- https://hackage.haskell.org/package/typed-process
-  , typed-process == 0.2.11.1
+  , typed-process == 0.2.12.0
 
     -- https://hackage.haskell.org/package/vector
-  , vector == 0.13.1.0
+  , vector == 0.13.2.0
 
     -- https://hackage.haskell.org/package/yaml
   , yaml == 0.11.11.2
