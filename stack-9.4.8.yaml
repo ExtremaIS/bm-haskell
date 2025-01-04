@@ -6,3 +6,5 @@ packages:
 flags:
   aeson:
     ordered-keymap: false
+  bm:
+    optparse-applicative_ge_0_18: false

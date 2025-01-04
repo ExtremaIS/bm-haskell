@@ -4,5 +4,5 @@ packages:
   - .
 
 flags:
-  bm:
-    optparse-applicative_ge_0_18: true
+  aeson:
+    ordered-keymap: false

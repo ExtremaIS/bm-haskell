@@ -34,10 +34,9 @@ source-repository head
   type: git
   location: https://github.com/ExtremaIS/bm-haskell.git
 
--- This flag is referenced in the Stack build-constraints.yaml configuration.
 flag optparse-applicative_ge_0_18
   description: Use optparse-applicative 0.18 or newer
-  default: False
+  default: True
   manual: False
 
 library
