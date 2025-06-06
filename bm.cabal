@@ -74,7 +74,7 @@ executable bm
     , yaml >=0.11.5.0 && <0.12
   if flag(optparse-applicative_ge_0_18)
     build-depends:
-        optparse-applicative >=0.18 && <0.19
+        optparse-applicative >=0.18 && <0.20
       , prettyprinter >=1.7.1 && <1.8
   else
     build-depends:
