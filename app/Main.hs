@@ -2,7 +2,7 @@
 -- |
 -- Module      : Main
 -- Description : bm: open bookmarks and queries from the command line
--- Copyright   : Copyright (c) 2021-2025 Travis Cardwell
+-- Copyright   : Copyright (c) 2021-2026 Travis Cardwell
 -- License     : MIT
 --
 -- See the README for details.

@@ -2,7 +2,7 @@
 -- |
 -- Module      : BM
 -- Description : API
--- Copyright   : Copyright (c) 2021-2025 Travis Cardwell
+-- Copyright   : Copyright (c) 2021-2026 Travis Cardwell
 -- License     : MIT
 ------------------------------------------------------------------------------
 
