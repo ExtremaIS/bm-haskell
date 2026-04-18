@@ -11,15 +11,15 @@ MODE ?= stack
 DESTDIR ?=
 PREFIX  ?= /usr/local
 
-DEB_CONTAINER    ?= extremais/pkg-debian-stack:bookworm
-RPM_CONTAINER    ?= extremais/pkg-fedora-stack:41
+DEB_CONTAINER    ?= extremais/pkg-debian-stack:trixie
+RPM_CONTAINER    ?= extremais/pkg-fedora-stack:43
 MAINTAINER_NAME  ?= Travis Cardwell
 MAINTAINER_EMAIL ?= travis.cardwell@extrema.is
 
-TEST_DEB_CONTAINER ?= debian:bookworm
+TEST_DEB_CONTAINER ?= debian:trixie
 TEST_DEB_ARCH      ?= amd64
-TEST_RPM_CONTAINER ?= fedora:41
-TEST_RPM_OS        ?= fc41
+TEST_RPM_CONTAINER ?= fedora:43
+TEST_RPM_OS        ?= fc43
 TEST_RPM_ARCH      ?= x86_64
 
 ##############################################################################
