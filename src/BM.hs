@@ -148,7 +148,7 @@ type Url = String
 -- YAML attributes:
 --
 -- * @command@: top-level command (string, default depends on the OS)
--- * @args@: bookmarks (array of 'Bookmark')
+-- * @args@: bookmarks (array of t'Bookmark')
 --
 -- Default commands:
 --
@@ -179,8 +179,8 @@ instance FromJSON Config where
 -- * @keyword@: bookmark keyword (string)
 -- * @command@: command for this bookmark and children (string, optional)
 -- * @url@: bookmark URL (string, optional)
--- * @query@: bookmark query definition ('Query', optional)
--- * @args@: child bookmarks (array of 'Bookmark', optional)
+-- * @query@: bookmark query definition (t'Query', optional)
+-- * @args@: child bookmarks (array of t'Bookmark', optional)
 --
 -- A command be set to override the top-level command, but this is generally
 -- not done.  If a bookmark is selected and there is no URL, the first child
@@ -219,7 +219,7 @@ instance FromJSON Bookmark where
 --
 -- * @action@: URL (string)
 -- * @parameter@: query parameter name (string, default: @q@)
--- * @hidden@: array of constant parameters ('Parameter')
+-- * @hidden@: array of constant parameters (t'Parameter')
 --
 -- @since 0.1.0.0
 data Query
