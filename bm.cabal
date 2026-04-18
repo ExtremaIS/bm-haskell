@@ -30,6 +30,7 @@ tested-with:
    || ==9.8.4
    || ==9.10.3
    || ==9.12.4
+   || ==9.14.1
 
 source-repository head
   type: git
@@ -48,7 +49,7 @@ library
       Paths_bm
   build-depends:
       aeson >=1.4.7.1 && < 2.3
-    , base >=4.13.0.0 && <4.22
+    , base >=4.13.0.0 && <4.23
     , dlist >=0.8.0.8 && <1.1
     , network-uri >=2.6.3.0 && <2.7
     , scientific >=0.3.6.2 && <0.4
