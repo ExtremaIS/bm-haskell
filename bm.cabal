@@ -47,6 +47,8 @@ library
       BM
   other-modules:
       Paths_bm
+  autogen-modules:
+      Paths_bm
   build-depends:
       aeson >=1.4.7.1 && < 2.4
     , base >=4.13.0.0 && <4.23
