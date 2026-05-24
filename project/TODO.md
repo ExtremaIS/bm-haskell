@@ -4,6 +4,8 @@
 
 ## Tests
 
+## Compatibility
+
 ## Documentation
 
 ## Project

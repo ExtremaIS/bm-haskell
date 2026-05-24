@@ -1,0 +1,8 @@
+resolver: lts-24.41
+
+packages:
+  - .
+
+flags:
+  aeson:
+    ordered-keymap: false

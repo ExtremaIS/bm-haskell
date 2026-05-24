@@ -20,7 +20,7 @@ jobs:
       ghcvers_upper: ${{ steps.set-ghcvers.outputs.ghcvers_upper }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Set ghcvers
         id: set-ghcvers
         run: ./test-all.sh github >> $GITHUB_OUTPUT
@@ -35,9 +35,9 @@ jobs:
         ghc: ${{fromJSON(needs.config.outputs.ghcvers)}}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Setup Haskell
-        uses: haskell/actions/setup@v2
+        uses: haskell-actions/setup@v2
         id: setup
         with:
           ghc-version: ${{ matrix.ghc }}
@@ -61,7 +61,7 @@ jobs:
           cabal v2-configure $CABAL_OPTS --disable-documentation
           cabal v2-build --dry-run $CABAL_OPTS
       - name: Restore Cached Dependencies
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v5
         id: cache
         with:
           path: ${{ steps.setup.outputs.cabal-store }}
@@ -70,7 +70,7 @@ jobs:
       - name: Install Dependencies
         run: cabal v2-build all $CABAL_OPTS --only-dependencies
       - name: Save Cached Dependencies
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v5
         if: ${{ !steps.cache.outputs.cache-hit
           || steps.cache.outputs.cache-primary-key != steps.cache.outputs.cache-matched-key }}
         with:
@@ -93,9 +93,9 @@ jobs:
         ghc: ${{fromJSON(needs.config.outputs.ghcvers)}}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Setup Haskell
-        uses: haskell/actions/setup@v2
+        uses: haskell-actions/setup@v2
         id: setup
         with:
           ghc-version: ${{ matrix.ghc }}
@@ -114,7 +114,7 @@ jobs:
           CACHE_RESTORE_KEY="${RUNNER_OS}-$(date +%Y%m)-ghc-${GHC_VERSION}-stack-"
           echo "CACHE_RESTORE_KEY=${CACHE_RESTORE_KEY}" | tee -a "${GITHUB_ENV}"
       - name: Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           path: |
             ~/.stack
@@ -138,9 +138,9 @@ jobs:
         ghc: ${{fromJSON(needs.config.outputs.ghcvers_lower)}}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Setup Haskell
-        uses: haskell/actions/setup@v2
+        uses: haskell-actions/setup@v2
         id: setup
         with:
           ghc-version: ${{ matrix.ghc }}
@@ -161,7 +161,7 @@ jobs:
           cabal v2-configure $CABAL_OPTS --disable-documentation
           cabal v2-build --dry-run $CABAL_OPTS
       - name: Restore Cached Dependencies
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v5
         id: cache
         with:
           path: ${{ steps.setup.outputs.cabal-store }}
@@ -170,7 +170,7 @@ jobs:
       - name: Install Dependencies
         run: cabal v2-build all $CABAL_OPTS --only-dependencies
       - name: Save Cached Dependencies
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v5
         if: ${{ !steps.cache.outputs.cache-hit
           || steps.cache.outputs.cache-primary-key != steps.cache.outputs.cache-matched-key }}
         with:
@@ -193,9 +193,9 @@ jobs:
         ghc: ${{fromJSON(needs.config.outputs.ghcvers_upper)}}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Setup Haskell
-        uses: haskell/actions/setup@v2
+        uses: haskell-actions/setup@v2
         id: setup
         with:
           ghc-version: ${{ matrix.ghc }}
@@ -216,7 +216,7 @@ jobs:
           cabal v2-configure $CABAL_OPTS --disable-documentation
           cabal v2-build --dry-run $CABAL_OPTS
       - name: Restore Cached Dependencies
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v5
         id: cache
         with:
           path: ${{ steps.setup.outputs.cabal-store }}
@@ -225,7 +225,7 @@ jobs:
       - name: Install Dependencies
         run: cabal v2-build all $CABAL_OPTS --only-dependencies
       - name: Save Cached Dependencies
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v5
         if: ${{ !steps.cache.outputs.cache-hit
           || steps.cache.outputs.cache-primary-key != steps.cache.outputs.cache-matched-key }}
         with:
@@ -244,13 +244,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        cabal: ['2.4.1.0', '3.0.0.0', '3.2.0.0', '3.4.1.0', '3.6.2.0', '3.8.1.0', '3.10.1.0']
-        ghc: ['8.6.5']
+        cabal: ['3.0.0.0']
+        ghc: ['8.8.4']
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Setup Haskell
-        uses: haskell/actions/setup@v2
+        uses: haskell-actions/setup@v2
         id: setup
         with:
           ghc-version: ${{ matrix.ghc }}
@@ -274,7 +274,7 @@ jobs:
           cabal v2-configure $CABAL_OPTS --disable-documentation
           cabal v2-build --dry-run $CABAL_OPTS
       - name: Restore Cached Dependencies
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v5
         id: cache
         with:
           path: ${{ steps.setup.outputs.cabal-store }}
@@ -283,7 +283,7 @@ jobs:
       - name: Install Dependencies
         run: cabal v2-build all $CABAL_OPTS --only-dependencies
       - name: Save Cached Dependencies
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v5
         if: ${{ !steps.cache.outputs.cache-hit
           || steps.cache.outputs.cache-primary-key != steps.cache.outputs.cache-matched-key }}
         with:
