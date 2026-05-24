@@ -4,7 +4,7 @@ with-compiler: ghc-9.14.1
 
 constraints:
     -- https://hackage.haskell.org/package/aeson
-  , aeson == 2.2.4.1
+  , aeson == 2.3.0.0
 
     -- https://hackage.haskell.org/package/base
     -- GHC boot library
@@ -28,7 +28,7 @@ constraints:
   , optparse-applicative == 0.19.0.0
 
     -- https://hackage.haskell.org/package/prettyprinter
-  , prettyprinter == 1.7.1
+  , prettyprinter == 1.7.2
 
     -- https://hackage.haskell.org/package/scientific
   , scientific == 0.3.8.1
